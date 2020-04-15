@@ -72,5 +72,5 @@ DIGIT    [0-9]
 %%
 
 int main() {
-	yylex();
+	yylex();   
 }
