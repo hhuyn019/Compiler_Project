@@ -68,7 +68,7 @@ DIGIT    [0-9]
 
 {DIGIT}+ {printf("NUMBER %s\n", yytext); currPos += yyleng;}
 
-
+. {printf("Error at line %d, column %d: unrecognized symbol \"%s\"\n", currLine, currPos, yytext);}
 %%
 
 int main() {
