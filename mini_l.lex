@@ -61,13 +61,13 @@ DIGIT    [0-9]
 
 [a-zA-Z][a-zA-Z0-9_]*[a-zA-Z0-9][_]+|[a-zA-Z][_]+ {printf("Error at line %d , column %d: identifier \"%s\" cannot end with an underscore\n", currLine, currPos, yytext); exit(0); }
 
-{DIGIT}+[a-zA-Z][a-zA-Z0-9_]*[a-zA-Z0-9]|{DIGIT}+[a-zA-Z] {printf("Error at line %d, column %d: identifier \"%s\" must begin with a letter\n", currLine, currPos, yytext); exit(0); }
+{DIGIT}+[a-zA-Z][a-zA-Z0-9_]*[a-zA-Z0-9][_]+|{DIGIT}+[a-zA-Z][_]+ {printf("Error at line %d, column %d: identifier \"%s\" must begin with a letter\n", currLine, currPos, yytext); exit(0); }
 
 "\n"		{currLine++; currPos = 1;}
 
 {DIGIT}+ {printf("NUMBER %s\n", yytext); currPos += yyleng;}
 
-. {printf("Error at line %d, column %d: unrecognized symbol \"%s\"\n", currLine, currPos, yytext);}
+. {printf("Error at line %d, column %d: unrecognized symbol \"%s\"\n", currLine, currPos, yytext); exit(0);}
 %%
 
 int main() {
