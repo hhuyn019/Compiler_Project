@@ -37,6 +37,9 @@ beginbody	## main program
 	    i := i + 1;
     endloop;
 
+function 2n;
+function i_;
+
     ## make the array
     i := 2;
     while i <= sqrt_n beginloop
