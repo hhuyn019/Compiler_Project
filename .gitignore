@@ -1,3 +1,4 @@
 a.out
 lexer
+lexer*
 lex.yy.c
