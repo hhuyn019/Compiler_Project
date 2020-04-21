@@ -13,7 +13,6 @@ test:	all
 
 test_mac:	mac
 	cat test.txt | ./lexer
-			
 
 clean:		
 	rm -f lex.yy.c lexer
