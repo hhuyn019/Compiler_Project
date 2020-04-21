@@ -16,4 +16,4 @@ test_mac:	mac
 			
 
 clean:		
-	rm -f lex.yy.c lexers
+	rm -f lex.yy.c lexer
