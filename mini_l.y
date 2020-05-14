@@ -39,8 +39,8 @@ multi_statement:	/*epsilon*/ { printf("multi_statement->epsilon\n")}
 		| multi_statement SEMICOLON { printf("multi_statement statement SEMICOLON\n")}
 		;
 
-multi_id:	IDENTIFIER { printf("multi_id -> IDENTIFIER"); }
-		| multi_id COMMA IDENTIFIER { printf("multi_id -> multi_id COMMA IDENTIFIER");}
+multi_id:	IDENT { printf("multi_id -> IDENT"); }
+		| multi_id COMMA IDENT { printf("multi_id -> multi_id COMMA IDENT");}
 		;
 
 function:	FUNCTION IDENT SEMICOLON 
