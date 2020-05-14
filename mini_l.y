@@ -28,9 +28,29 @@ void yyerror(const char * msg);
 %%
 
 program: 	/*epsilon*/ {printf("program -> epsilon\n");}
-		| program function {printf("program -> program function\n");};
+		| program function {printf("program -> program function\n");}
+		;
 
 function:	FUNCTION IDENT SEMICOLON 
+		BEGINPARAMS multi_declaration ENDPARAMS
+		BEGINLOCALS multi_declaration ENDLOCALS
+		BEGINBODY multi_statement ENDBODY
+		{printf("function -> FUNCTION IDENT %s SEMICOLON 
+		BEGINPARAMS multi_declaration ENDPARAMS 
+		BEGINLOCALS multi_declaration ENDLOCALS 
+		BEGINBODY multi_statement ENDBODY\n", $2);}
+		;
+
+declaration:	multi_id COLON INTEGER {printf("declaration -> multi_id COLON INTEGER\n");}
+		| multi_id COLON ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF INTEGER 
+		{printf("declaration -> multi_id COLON ARRAY L_SQUARE_BRACKET NUMBER %d
+		R_SQUARE_BRACKET OF INTEGER\n", $5);}
+		;
+
+statement:	var ASSIGN exp {printf("statement -> var ASSIGN exp\n");}
+		| IF bool_exp THEN multi_statement ENDIF 
+		{printf("statement -> IF bool_exp THEN multi_statement ENDIF\n");}
+		| IF bool_exp THEN
 
 %%
 
