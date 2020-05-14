@@ -1,0 +1,358 @@
+Nonterminals useless in grammar
+
+   multi_id
+   declaration
+   statement
+   multi_var
+   bool_exp
+   relation_and_exp
+   relation_exp
+   comp
+   exp
+   mult_exp
+   term
+   multi_exp
+   var
+
+
+Terminals unused in grammar
+
+   NUMBER
+   INTEGER
+   ARRAY
+   OF
+   IF
+   THEN
+   ENDIF
+   ELSE
+   WHILE
+   DO
+   FOR
+   BEGINLOOP
+   ENDLOOP
+   CONTINUE
+   READ
+   WRITE
+   AND
+   OR
+   NOT
+   TRUE
+   FALSE
+   RETURN
+   SUB
+   ADD
+   MULT
+   DIV
+   MOD
+   EQ
+   NEQ
+   LT
+   GT
+   LTE
+   GTE
+   COLON
+   COMMA
+   L_PAREN
+   R_PAREN
+   L_SQUARE_BRACKET
+   R_SQUARE_BRACKET
+   ASSIGN
+
+
+Rules useless in grammar
+
+    8 multi_id: IDENT
+    9         | multi_id COMMA IDENT
+
+   10 declaration: multi_id COLON INTEGER
+   11            | multi_id COLON ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF INTEGER
+
+   12 statement: var ASSIGN exp
+   13          | IF bool_exp THEN multi_statement ENDIF
+   14          | IF bool_exp THEN multi_statement ELSE multi_statement ENDIF
+   15          | WHILE bool_exp BEGINLOOP multi_statement ENDLOOP
+   16          | DO BEGINLOOP multi_statement ENDLOOP WHILE bool_exp
+   17          | FOR var ASSIGN NUMBER SEMICOLON bool_exp SEMICOLON var ASSIGN exp BEGINLOOP multi_statement SEMICOLON ENDLOOP
+   18          | READ multi_var
+   19          | WRITE multi_var
+   20          | CONTINUE
+   21          | RETURN exp
+
+   22 multi_var: var
+   23          | multi_var COMMA var
+
+   24 bool_exp: relation_and_exp
+   25         | bool_exp OR relation_and_exp
+
+   26 relation_and_exp: relation_exp
+   27                 | relation_and_exp AND relation_exp
+
+   28 relation_exp: exp comp exp
+   29             | TRUE
+   30             | FALSE
+   31             | L_PAREN bool_exp R_PAREN
+   32             | NOT exp comp exp
+   33             | NOT TRUE
+   34             | NOT FALSE
+   35             | NOT L_PAREN bool_exp R_PAREN
+
+   36 comp: EQ
+   37     | NEQ
+   38     | LT
+   39     | GT
+   40     | LTE
+   41     | GTE
+
+   42 exp: mult_exp
+   43    | exp ADD mult_exp
+   44    | exp SUB mult_exp
+
+   45 mult_exp: term
+   46         | mult_exp MULT term
+   47         | mult_exp DIV term
+   48         | mult_exp MOD term
+
+   49 term: var
+   50     | SUB var
+   51     | NUMBER
+   52     | SUB NUMBER
+   53     | L_PAREN exp R_PAREN
+   54     | SUB L_PAREN exp R_PAREN
+   55     | IDENT L_PAREN multi_exp R_PAREN
+   56     | IDENT L_PAREN R_PAREN
+
+   57 multi_exp: exp
+   58          | multi_exp COMMA exp
+
+   59 var: IDENT
+   60    | IDENT L_SQUARE_BRACKET exp R_SQUARE_BRACKET
+   61    | IDENT L_SQUARE_BRACKET exp R_SQUARE_BRACKET L_SQUARE_BRACKET exp R_SQUARE_BRACKET
+
+
+Grammar
+
+    0 $accept: program $end
+
+    1 program: %empty
+    2        | program function
+
+    3 multi_declaration: %empty
+    4                  | multi_declaration SEMICOLON
+
+    5 multi_statement: %empty
+    6                | multi_statement SEMICOLON
+
+    7 function: FUNCTION IDENT SEMICOLON BEGINPARAMS multi_declaration ENDPARAMS BEGINLOCALS multi_declaration ENDLOCALS BEGINBODY multi_statement ENDBODY
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+error (256)
+IDENT (258) 7
+NUMBER (259)
+FUNCTION (260) 7
+SEMICOLON (261) 4 6 7
+INTEGER (262)
+BEGINPARAMS (263) 7
+ENDPARAMS (264) 7
+BEGINLOCALS (265) 7
+ENDLOCALS (266) 7
+BEGINBODY (267) 7
+ENDBODY (268) 7
+ARRAY (269)
+OF (270)
+IF (271)
+THEN (272)
+ENDIF (273)
+ELSE (274)
+WHILE (275)
+DO (276)
+FOR (277)
+BEGINLOOP (278)
+ENDLOOP (279)
+CONTINUE (280)
+READ (281)
+WRITE (282)
+AND (283)
+OR (284)
+NOT (285)
+TRUE (286)
+FALSE (287)
+RETURN (288)
+SUB (289)
+ADD (290)
+MULT (291)
+DIV (292)
+MOD (293)
+EQ (294)
+NEQ (295)
+LT (296)
+GT (297)
+LTE (298)
+GTE (299)
+COLON (300)
+COMMA (301)
+L_PAREN (302)
+R_PAREN (303)
+L_SQUARE_BRACKET (304)
+R_SQUARE_BRACKET (305)
+ASSIGN (306)
+
+
+Nonterminals, with rules where they appear
+
+$accept (52)
+    on left: 0
+program (53)
+    on left: 1 2, on right: 0 2
+multi_declaration (54)
+    on left: 3 4, on right: 4 7
+multi_statement (55)
+    on left: 5 6, on right: 6 7
+function (56)
+    on left: 7, on right: 2
+
+
+State 0
+
+    0 $accept: . program $end
+
+    $default  reduce using rule 1 (program)
+
+    program  go to state 1
+
+
+State 1
+
+    0 $accept: program . $end
+    2 program: program . function
+
+    $end      shift, and go to state 2
+    FUNCTION  shift, and go to state 3
+
+    function  go to state 4
+
+
+State 2
+
+    0 $accept: program $end .
+
+    $default  accept
+
+
+State 3
+
+    7 function: FUNCTION . IDENT SEMICOLON BEGINPARAMS multi_declaration ENDPARAMS BEGINLOCALS multi_declaration ENDLOCALS BEGINBODY multi_statement ENDBODY
+
+    IDENT  shift, and go to state 5
+
+
+State 4
+
+    2 program: program function .
+
+    $default  reduce using rule 2 (program)
+
+
+State 5
+
+    7 function: FUNCTION IDENT . SEMICOLON BEGINPARAMS multi_declaration ENDPARAMS BEGINLOCALS multi_declaration ENDLOCALS BEGINBODY multi_statement ENDBODY
+
+    SEMICOLON  shift, and go to state 6
+
+
+State 6
+
+    7 function: FUNCTION IDENT SEMICOLON . BEGINPARAMS multi_declaration ENDPARAMS BEGINLOCALS multi_declaration ENDLOCALS BEGINBODY multi_statement ENDBODY
+
+    BEGINPARAMS  shift, and go to state 7
+
+
+State 7
+
+    7 function: FUNCTION IDENT SEMICOLON BEGINPARAMS . multi_declaration ENDPARAMS BEGINLOCALS multi_declaration ENDLOCALS BEGINBODY multi_statement ENDBODY
+
+    $default  reduce using rule 3 (multi_declaration)
+
+    multi_declaration  go to state 8
+
+
+State 8
+
+    4 multi_declaration: multi_declaration . SEMICOLON
+    7 function: FUNCTION IDENT SEMICOLON BEGINPARAMS multi_declaration . ENDPARAMS BEGINLOCALS multi_declaration ENDLOCALS BEGINBODY multi_statement ENDBODY
+
+    SEMICOLON  shift, and go to state 9
+    ENDPARAMS  shift, and go to state 10
+
+
+State 9
+
+    4 multi_declaration: multi_declaration SEMICOLON .
+
+    $default  reduce using rule 4 (multi_declaration)
+
+
+State 10
+
+    7 function: FUNCTION IDENT SEMICOLON BEGINPARAMS multi_declaration ENDPARAMS . BEGINLOCALS multi_declaration ENDLOCALS BEGINBODY multi_statement ENDBODY
+
+    BEGINLOCALS  shift, and go to state 11
+
+
+State 11
+
+    7 function: FUNCTION IDENT SEMICOLON BEGINPARAMS multi_declaration ENDPARAMS BEGINLOCALS . multi_declaration ENDLOCALS BEGINBODY multi_statement ENDBODY
+
+    $default  reduce using rule 3 (multi_declaration)
+
+    multi_declaration  go to state 12
+
+
+State 12
+
+    4 multi_declaration: multi_declaration . SEMICOLON
+    7 function: FUNCTION IDENT SEMICOLON BEGINPARAMS multi_declaration ENDPARAMS BEGINLOCALS multi_declaration . ENDLOCALS BEGINBODY multi_statement ENDBODY
+
+    SEMICOLON  shift, and go to state 9
+    ENDLOCALS  shift, and go to state 13
+
+
+State 13
+
+    7 function: FUNCTION IDENT SEMICOLON BEGINPARAMS multi_declaration ENDPARAMS BEGINLOCALS multi_declaration ENDLOCALS . BEGINBODY multi_statement ENDBODY
+
+    BEGINBODY  shift, and go to state 14
+
+
+State 14
+
+    7 function: FUNCTION IDENT SEMICOLON BEGINPARAMS multi_declaration ENDPARAMS BEGINLOCALS multi_declaration ENDLOCALS BEGINBODY . multi_statement ENDBODY
+
+    $default  reduce using rule 5 (multi_statement)
+
+    multi_statement  go to state 15
+
+
+State 15
+
+    6 multi_statement: multi_statement . SEMICOLON
+    7 function: FUNCTION IDENT SEMICOLON BEGINPARAMS multi_declaration ENDPARAMS BEGINLOCALS multi_declaration ENDLOCALS BEGINBODY multi_statement . ENDBODY
+
+    SEMICOLON  shift, and go to state 16
+    ENDBODY    shift, and go to state 17
+
+
+State 16
+
+    6 multi_statement: multi_statement SEMICOLON .
+
+    $default  reduce using rule 6 (multi_statement)
+
+
+State 17
+
+    7 function: FUNCTION IDENT SEMICOLON BEGINPARAMS multi_declaration ENDPARAMS BEGINLOCALS multi_declaration ENDLOCALS BEGINBODY multi_statement ENDBODY .
+
+    $default  reduce using rule 7 (function)

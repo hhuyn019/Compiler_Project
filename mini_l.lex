@@ -51,7 +51,7 @@ DIGIT    [0-9]
 "," {currPos += yyleng; return COMMA;}
 "(" {currPos += yyleng; return L_PAREN;}
 ")" {currPos += yyleng; return R_PAREN;}
-"[" {currPos += yyleng; return L_SQAURE_BRACKET;}
+"[" {currPos += yyleng; return L_SQUARE_BRACKET;}
 "]" {currPos += yyleng; return R_SQUARE_BRACKET;}
 ":=" {currPos += yyleng; return ASSIGN;}
 

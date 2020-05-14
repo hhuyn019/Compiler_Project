@@ -1,5 +1,6 @@
 %{
 #include <stdio.h>
+#include <stdlib.h>
 extern FILE * yyin;
 extern int currLine;
 extern int currPos;
@@ -14,7 +15,7 @@ void yyerror(const char * msg);
 
 %token <cVal> IDENT
 %token <iVal> NUMBER
-%token FUNCTION SEMICOLON
+%token FUNCTION SEMICOLON INTEGER
 %token BEGINPARAMS ENDPARAMS BEGINLOCALS ENDLOCALS BEGINBODY ENDBODY
 %token ARRAY OF IF THEN ENDIF ELSE WHILE DO FOR
 %token BEGINLOOP ENDLOOP CONTINUE READ WRITE
@@ -23,12 +24,25 @@ void yyerror(const char * msg);
 %token EQ NEQ LT GT LTE GTE
 %token COLON COMMA L_PAREN R_PAREN L_SQUARE_BRACKET R_SQUARE_BRACKET ASSIGN
 
+%error-verbose
 %start program 
 
 %%
 
 program: 	/*epsilon*/ {printf("program -> epsilon\n");}
 		| program function {printf("program -> program function\n");}
+		;
+
+multi_declaration:	/*epsilon*/ { printf("multi_declaration -> epsilon\n");}
+		| multi_declaration SEMICOLON { printf("multi_declaration -> multi_declaration SEMICOLON\n");}
+		;		
+
+multi_statement:	/*epsilon*/ { printf("multi_statement -> epsilon\n");}
+		| multi_statement SEMICOLON { printf("multi_statement -> multi_statement SEMICOLON\n");}
+		;
+
+multi_id:	IDENT { printf("multi_id -> IDENT");}
+		| multi_id COMMA IDENT {printf("multi_id -> multi_id COMMA IDENT");}
 		;
 
 function:	FUNCTION IDENT SEMICOLON 
@@ -58,6 +72,10 @@ statement:	var ASSIGN exp {printf("statement -> var ASSIGN exp\n");}
 		| WRITE multi_var {printf("statement -> WRITE multi_var\n");}
 		| CONTINUE {printf("statement -> CONTINUE\n");}
 		| RETURN exp {printf("statement -> RETURN exp\n");}
+		;
+
+multi_var:	var {printf("multi_var -> var\n");}
+		| multi_var COMMA var {printf("multi_var -> multi_var COMMA var\n");}
 		;
 
 bool_exp:	relation_and_exp {printf("bool_exp -> relation_and_exp\n");}
@@ -106,6 +124,10 @@ term:	var {printf("term -> var\n");}
 	| IDENT L_PAREN multi_exp R_PAREN {printf("term -> IDENT L_PAREN multi_exp R_PAREN\n");}
 	| IDENT L_PAREN R_PAREN {printf("term -> IDENT L_PAREN R_PAREN\n");}
 	;
+
+multi_exp:	exp {printf("multi_exp -> exp\n");}
+		| multi_exp COMMA exp {printf("multi_exp -> multi_exp COMMA exp\n");}
+		;
 
 var:	IDENT {printf("var -> IDENT\n");}
 	| IDENT L_SQUARE_BRACKET exp R_SQUARE_BRACKET 
