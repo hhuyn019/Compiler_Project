@@ -34,16 +34,12 @@ program: 	/*epsilon*/ {printf("program -> epsilon\n");}
 		;
 
 multi_declaration:	/*epsilon*/ { printf("multi_declaration -> epsilon\n");}
-		| multi_declaration SEMICOLON { printf("multi_declaration -> multi_declaration SEMICOLON\n");}
-		;		
+			| multi_declaration SEMICOLON { printf("multi_declaration -> multi_declaration SEMICOLON\n");}
+			;		
 
-multi_statement:	/*epsilon*/ { printf("multi_statement -> epsilon\n");}
-		| multi_statement SEMICOLON { printf("multi_statement -> multi_statement SEMICOLON\n");}
-		;
-
-multi_id:	IDENT { printf("multi_id -> IDENT");}
-		| multi_id COMMA IDENT {printf("multi_id -> multi_id COMMA IDENT");}
-		;
+multi_statement:	statement SEMICOLON { printf("multi_statement -> statement SEMICOLON\n");}
+			| multi_statement statement SEMICOLON { printf("multi_statement -> multi_statement statement SEMICOLON\n");}
+			;
 
 function:	FUNCTION IDENT SEMICOLON 
 		BEGINPARAMS multi_declaration ENDPARAMS
@@ -56,6 +52,11 @@ declaration:	multi_id COLON INTEGER {printf("declaration -> multi_id COLON INTEG
 		| multi_id COLON ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF INTEGER 
 		{printf("declaration -> multi_id COLON ARRAY L_SQUARE_BRACKET NUMBER %d R_SQUARE_BRACKET OF INTEGER\n", $5);}
 		;
+
+multi_id:       IDENT { printf("multi_id -> IDENT");}
+                | multi_id COMMA IDENT {printf("multi_id -> multi_id COMMA IDENT");}
+                ;
+
 
 statement:	var ASSIGN exp {printf("statement -> var ASSIGN exp\n");}
 		| IF bool_exp THEN multi_statement ENDIF 
