@@ -31,6 +31,18 @@ program: 	/*epsilon*/ {printf("program -> epsilon\n");}
 		| program function {printf("program -> program function\n");}
 		;
 
+multi_declaration:	/*epsilon*/ { printf("multi_declaration->epsilon\n")}
+		| multi_declaration SEMICOLON { printf("multi_declaration declaration SEMICOLON\n")}
+		;		
+
+multi_statement:	/*epsilon*/ { printf("multi_statement->epsilon\n")}
+		| multi_statement SEMICOLON { printf("multi_statement statement SEMICOLON\n")}
+		;
+
+multi_id:	IDENTIFIER { printf("multi_id -> IDENTIFIER"); }
+		| multi_id COMMA IDENTIFIER { printf("multi_id -> multi_id COMMA IDENTIFIER");}
+		;
+
 function:	FUNCTION IDENT SEMICOLON 
 		BEGINPARAMS multi_declaration ENDPARAMS
 		BEGINLOCALS multi_declaration ENDLOCALS
@@ -46,8 +58,9 @@ declaration:	multi_id COLON INTEGER {printf("declaration -> multi_id COLON INTEG
 statement:	var ASSIGN exp {printf("statement -> var ASSIGN exp\n");}
 		| IF bool_exp THEN multi_statement ENDIF 
 		{printf("statement -> IF bool_exp THEN multi_statement ENDIF\n");}
-		| IF bool_exp THEN
-
+		| IF bool_exp THEN multi_statement ELSE
+		{printf("statement -> IF bool_exp THEN multi_statement ELSE")}
+		;
 %%
 
 int main(int argc, char ** argv)
