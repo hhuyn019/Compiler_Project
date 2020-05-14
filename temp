@@ -1,0 +1,50 @@
+%{
+#include <stdio.h>
+extern FILE * yyin;
+extern int currLine;
+extern int currPos;
+void yyerror(const char * msg);
+ // valid c code
+%}
+
+%token FUNCTION SEMICOLON IDENT NUMBER
+
+%start program 
+
+%%
+
+program: functions
+	{printf("program->functions\n");}
+	;
+functions: /*epsilon*/
+	{printf("functions->epsilon\n");}
+	| function functions
+	{printf("functions->function functions\n");}
+function: FUNCTION IDENT SEMICOLON
+	{printf("function->FUNCTION IDENT SEMICOLON\n");}
+
+%%
+
+int main(int argc, char ** argv)
+{
+	if(argc >= 2)
+	{
+		yyin = fopen(argv[1], "r");
+		if(yyin == NULL)
+		{
+			yyin = stdin;
+		}
+	}
+	else
+	{
+		yyin = stdin;
+	}
+
+	yyparse(); // calls yylex()
+
+	return 1;
+}
+
+void yyerror(const char * msg) {
+	printf("Error in line %d: %s\n", currLine, msg);
+}

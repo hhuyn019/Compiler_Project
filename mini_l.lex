@@ -1,4 +1,5 @@
-%{   
+%{
+#include "y.tab.h"   
    int currLine = 1, currPos = 1;
 %}
 
@@ -44,6 +45,7 @@ DIGIT    [0-9]
 "<" {printf("LT\n"); currPos += yyleng;}
 ">" {printf("GT\n"); currPos += yyleng;}
 "<=" {printf("LTE\n"); currPos += yyleng;}
+">=" {printf("GTE\n"); currPos += yyleng;}
 ";" {printf("SEMICOLON\n"); currPos += yyleng;}
 ":" {printf("COLON\n"); currPos += yyleng;}
 "," {printf("COMMA\n"); currPos += yyleng;}
@@ -53,7 +55,7 @@ DIGIT    [0-9]
 "]" {printf("R_SQUARE_BRACKET\n"); currPos += yyleng;}
 ":=" {printf("ASSIGN\n"); currPos += yyleng;}
 
-[a-zA-Z][a-zA-Z0-9_]*[a-zA-Z0-9]|[a-zA-Z]  {printf("IDENT %s\n", yytext); currPos += yyleng;}
+[a-zA-Z][a-zA-Z0-9_]*[a-zA-Z0-9]|[a-zA-Z]  {currPos += yyleng; yylval.cVal = yytext; return IDENT;}
 
 "##".* 		{currPos = 1;}
 
@@ -61,11 +63,11 @@ DIGIT    [0-9]
 
 [a-zA-Z][a-zA-Z0-9_]*[a-zA-Z0-9][_]+|[a-zA-Z][_]+ {printf("Error at line %d , column %d: identifier \"%s\" cannot end with an underscore\n", currLine, currPos, yytext); exit(0); }
 
-{DIGIT}+[a-zA-Z][a-zA-Z0-9_]*[a-zA-Z0-9][_]+|{DIGIT}+[a-zA-Z][_]+ {printf("Error at line %d, column %d: identifier \"%s\" must begin with a letter\n", currLine, currPos, yytext); exit(0); }
+({DIGIT}|[_])+[a-zA-Z][a-zA-Z0-9_]*[a-zA-Z0-9]|({DIGIT}|[_])+[a-zA-Z] {printf("Error at line %d, column %d: identifier \"%s\" must begin with a letter\n", currLine, currPos, yytext); exit(0); }
 
 "\n"		{currLine++; currPos = 1;}
 
-{DIGIT}+ {printf("NUMBER %s\n", yytext); currPos += yyleng;}
+{DIGIT}+ {currPos += yyleng; yylval.iVal=atoi(yytext); return NUMBER;}
 
 . {printf("Error at line %d, column %d: unrecognized symbol \"%s\"\n", currLine, currPos, yytext); exit(0);}
 %%
