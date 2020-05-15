@@ -4,7 +4,7 @@
 extern FILE * yyin;
 extern int currLine;
 extern int currPos;
-void yyerror(const char * msg);
+int yyerror(const char * msg);
  // valid c code
 %}
 
@@ -30,11 +30,11 @@ void yyerror(const char * msg);
 %%
 
 program: 	/*epsilon*/ {printf("program -> epsilon\n");}
-		| program function {printf("program -> program function\n");}
+		| function program {printf("program -> function program\n");}
 		;
 
 multi_declaration:	/*epsilon*/ { printf("multi_declaration -> epsilon\n");}
-			| multi_declaration SEMICOLON { printf("multi_declaration -> multi_declaration SEMICOLON\n");}
+			| multi_declaration declaration SEMICOLON { printf("multi_declaration -> multi_declaration SEMICOLON\n");}
 			;		
 
 multi_statement:	statement SEMICOLON { printf("multi_statement -> statement SEMICOLON\n");}
@@ -53,8 +53,8 @@ declaration:	multi_id COLON INTEGER {printf("declaration -> multi_id COLON INTEG
 		{printf("declaration -> multi_id COLON ARRAY L_SQUARE_BRACKET NUMBER %d R_SQUARE_BRACKET OF INTEGER\n", $5);}
 		;
 
-multi_id:       IDENT { printf("multi_id -> IDENT");}
-                | multi_id COMMA IDENT {printf("multi_id -> multi_id COMMA IDENT");}
+multi_id:       IDENT { printf("multi_id -> IDENT %s\n", $1);}
+                | multi_id COMMA IDENT {printf("multi_id -> multi_id COMMA IDENT %s\n", $3);}
                 ;
 
 
@@ -130,11 +130,11 @@ multi_exp:	exp {printf("multi_exp -> exp\n");}
 		| multi_exp COMMA exp {printf("multi_exp -> multi_exp COMMA exp\n");}
 		;
 
-var:	IDENT {printf("var -> IDENT\n");}
+var:	IDENT {printf("var -> IDENT %s\n", $1);}
 	| IDENT L_SQUARE_BRACKET exp R_SQUARE_BRACKET 
-	{printf("var -> IDENT L_SQUARE_BRACKET exp R_SQUARE_BRACKET\n");}
+	{printf("var -> IDENT %s L_SQUARE_BRACKET exp R_SQUARE_BRACKET\n", $1);}
 	| IDENT L_SQUARE_BRACKET exp R_SQUARE_BRACKET L_SQUARE_BRACKET exp R_SQUARE_BRACKET
-	{printf("var -> IDENT L_SQUARE_BRACKET exp R_SQUARE_BRACKET L_SQUARE_BRACKET exp R_SQUARE_BRACKET\n");}
+	{printf("var -> IDENT %s L_SQUARE_BRACKET exp R_SQUARE_BRACKET L_SQUARE_BRACKET exp R_SQUARE_BRACKET\n", $1);}
 	;
 
 %%
@@ -156,9 +156,13 @@ int main(int argc, char ** argv)
 
 	yyparse(); // calls yylex()
 
-	return 1;
+	return 0;
 }
 
-void yyerror(const char * msg) {
-	printf("Error in line %d: %s\n", currLine, msg);
+//void yyerror(const char * msg) {
+//	printf("Error in line %d: %s\n", currLine, msg);
+//}
+
+int yyerror(const char *msg) {
+	printf("ERRRRRROR Line %d, position %d: %s\n", currLine, currPos, msg);
 }

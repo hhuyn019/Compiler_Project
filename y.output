@@ -1,156 +1,139 @@
-Nonterminals useless in grammar
-
-   declaration
-   multi_id
-
-
-Terminals unused in grammar
-
-   INTEGER
-   ARRAY
-   OF
-   COLON
-
-
-Rules useless in grammar
-
-   58 declaration: multi_id COLON INTEGER
-   59            | multi_id COLON ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF INTEGER
-
-   60 multi_id: IDENT
-   61         | multi_id COMMA IDENT
-
-
 Grammar
 
     0 $accept: program $end
 
     1 program: %empty
-    2        | program function
+    2        | function program
 
     3 multi_declaration: %empty
-    4                  | multi_declaration SEMICOLON
+    4                  | multi_declaration declaration SEMICOLON
 
     5 multi_statement: statement SEMICOLON
     6                | multi_statement statement SEMICOLON
 
     7 function: FUNCTION IDENT SEMICOLON BEGINPARAMS multi_declaration ENDPARAMS BEGINLOCALS multi_declaration ENDLOCALS BEGINBODY multi_statement ENDBODY
 
-    8 statement: var ASSIGN exp
-    9          | IF bool_exp THEN multi_statement ENDIF
-   10          | IF bool_exp THEN multi_statement ELSE multi_statement ENDIF
-   11          | WHILE bool_exp BEGINLOOP multi_statement ENDLOOP
-   12          | DO BEGINLOOP multi_statement ENDLOOP WHILE bool_exp
-   13          | FOR var ASSIGN NUMBER SEMICOLON bool_exp SEMICOLON var ASSIGN exp BEGINLOOP multi_statement SEMICOLON ENDLOOP
-   14          | READ multi_var
-   15          | WRITE multi_var
-   16          | CONTINUE
-   17          | RETURN exp
+    8 declaration: multi_id COLON INTEGER
+    9            | multi_id COLON ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF INTEGER
 
-   18 multi_var: var
-   19          | multi_var COMMA var
+   10 multi_id: IDENT
+   11         | multi_id COMMA IDENT
 
-   20 bool_exp: relation_and_exp
-   21         | bool_exp OR relation_and_exp
+   12 statement: var ASSIGN exp
+   13          | IF bool_exp THEN multi_statement ENDIF
+   14          | IF bool_exp THEN multi_statement ELSE multi_statement ENDIF
+   15          | WHILE bool_exp BEGINLOOP multi_statement ENDLOOP
+   16          | DO BEGINLOOP multi_statement ENDLOOP WHILE bool_exp
+   17          | FOR var ASSIGN NUMBER SEMICOLON bool_exp SEMICOLON var ASSIGN exp BEGINLOOP multi_statement SEMICOLON ENDLOOP
+   18          | READ multi_var
+   19          | WRITE multi_var
+   20          | CONTINUE
+   21          | RETURN exp
 
-   22 relation_and_exp: relation_exp
-   23                 | relation_and_exp AND relation_exp
+   22 multi_var: var
+   23          | multi_var COMMA var
 
-   24 relation_exp: exp comp exp
-   25             | TRUE
-   26             | FALSE
-   27             | L_PAREN bool_exp R_PAREN
-   28             | NOT exp comp exp
-   29             | NOT TRUE
-   30             | NOT FALSE
-   31             | NOT L_PAREN bool_exp R_PAREN
+   24 bool_exp: relation_and_exp
+   25         | bool_exp OR relation_and_exp
 
-   32 comp: EQ
-   33     | NEQ
-   34     | LT
-   35     | GT
-   36     | LTE
-   37     | GTE
+   26 relation_and_exp: relation_exp
+   27                 | relation_and_exp AND relation_exp
 
-   38 exp: mult_exp
-   39    | exp ADD mult_exp
-   40    | exp SUB mult_exp
+   28 relation_exp: exp comp exp
+   29             | TRUE
+   30             | FALSE
+   31             | L_PAREN bool_exp R_PAREN
+   32             | NOT exp comp exp
+   33             | NOT TRUE
+   34             | NOT FALSE
+   35             | NOT L_PAREN bool_exp R_PAREN
 
-   41 mult_exp: term
-   42         | mult_exp MULT term
-   43         | mult_exp DIV term
-   44         | mult_exp MOD term
+   36 comp: EQ
+   37     | NEQ
+   38     | LT
+   39     | GT
+   40     | LTE
+   41     | GTE
 
-   45 term: var
-   46     | SUB var
-   47     | NUMBER
-   48     | SUB NUMBER
-   49     | L_PAREN exp R_PAREN
-   50     | SUB L_PAREN exp R_PAREN
-   51     | IDENT L_PAREN multi_exp R_PAREN
-   52     | IDENT L_PAREN R_PAREN
+   42 exp: mult_exp
+   43    | exp ADD mult_exp
+   44    | exp SUB mult_exp
 
-   53 multi_exp: exp
-   54          | multi_exp COMMA exp
+   45 mult_exp: term
+   46         | mult_exp MULT term
+   47         | mult_exp DIV term
+   48         | mult_exp MOD term
 
-   55 var: IDENT
-   56    | IDENT L_SQUARE_BRACKET exp R_SQUARE_BRACKET
-   57    | IDENT L_SQUARE_BRACKET exp R_SQUARE_BRACKET L_SQUARE_BRACKET exp R_SQUARE_BRACKET
+   49 term: var
+   50     | SUB var
+   51     | NUMBER
+   52     | SUB NUMBER
+   53     | L_PAREN exp R_PAREN
+   54     | SUB L_PAREN exp R_PAREN
+   55     | IDENT L_PAREN multi_exp R_PAREN
+   56     | IDENT L_PAREN R_PAREN
+
+   57 multi_exp: exp
+   58          | multi_exp COMMA exp
+
+   59 var: IDENT
+   60    | IDENT L_SQUARE_BRACKET exp R_SQUARE_BRACKET
+   61    | IDENT L_SQUARE_BRACKET exp R_SQUARE_BRACKET L_SQUARE_BRACKET exp R_SQUARE_BRACKET
 
 
 Terminals, with rules where they appear
 
 $end (0) 0
 error (256)
-IDENT (258) 7 51 52 55 56 57
-NUMBER (259) 13 47 48
+IDENT (258) 7 10 11 55 56 59 60 61
+NUMBER (259) 9 17 51 52
 FUNCTION (260) 7
-SEMICOLON (261) 4 5 6 7 13
-INTEGER (262)
+SEMICOLON (261) 4 5 6 7 17
+INTEGER (262) 8 9
 BEGINPARAMS (263) 7
 ENDPARAMS (264) 7
 BEGINLOCALS (265) 7
 ENDLOCALS (266) 7
 BEGINBODY (267) 7
 ENDBODY (268) 7
-ARRAY (269)
-OF (270)
-IF (271) 9 10
-THEN (272) 9 10
-ENDIF (273) 9 10
-ELSE (274) 10
-WHILE (275) 11 12
-DO (276) 12
-FOR (277) 13
-BEGINLOOP (278) 11 12 13
-ENDLOOP (279) 11 12 13
-CONTINUE (280) 16
-READ (281) 14
-WRITE (282) 15
-AND (283) 23
-OR (284) 21
-NOT (285) 28 29 30 31
-TRUE (286) 25 29
-FALSE (287) 26 30
-RETURN (288) 17
-SUB (289) 40 46 48 50
-ADD (290) 39
-MULT (291) 42
-DIV (292) 43
-MOD (293) 44
-EQ (294) 32
-NEQ (295) 33
-LT (296) 34
-GT (297) 35
-LTE (298) 36
-GTE (299) 37
-COLON (300)
-COMMA (301) 19 54
-L_PAREN (302) 27 31 49 50 51 52
-R_PAREN (303) 27 31 49 50 51 52
-L_SQUARE_BRACKET (304) 56 57
-R_SQUARE_BRACKET (305) 56 57
-ASSIGN (306) 8 13
+ARRAY (269) 9
+OF (270) 9
+IF (271) 13 14
+THEN (272) 13 14
+ENDIF (273) 13 14
+ELSE (274) 14
+WHILE (275) 15 16
+DO (276) 16
+FOR (277) 17
+BEGINLOOP (278) 15 16 17
+ENDLOOP (279) 15 16 17
+CONTINUE (280) 20
+READ (281) 18
+WRITE (282) 19
+AND (283) 27
+OR (284) 25
+NOT (285) 32 33 34 35
+TRUE (286) 29 33
+FALSE (287) 30 34
+RETURN (288) 21
+SUB (289) 44 50 52 54
+ADD (290) 43
+MULT (291) 46
+DIV (292) 47
+MOD (293) 48
+EQ (294) 36
+NEQ (295) 37
+LT (296) 38
+GT (297) 39
+LTE (298) 40
+GTE (299) 41
+COLON (300) 8 9
+COMMA (301) 11 23 58
+L_PAREN (302) 31 35 53 54 55 56
+R_PAREN (303) 31 35 53 54 55 56
+L_SQUARE_BRACKET (304) 9 60 61
+R_SQUARE_BRACKET (305) 9 60 61
+ASSIGN (306) 12 17
 
 
 Nonterminals, with rules where they appear
@@ -162,1557 +145,1674 @@ program (53)
 multi_declaration (54)
     on left: 3 4, on right: 4 7
 multi_statement (55)
-    on left: 5 6, on right: 6 7 9 10 11 12 13
+    on left: 5 6, on right: 6 7 13 14 15 16 17
 function (56)
     on left: 7, on right: 2
-statement (57)
-    on left: 8 9 10 11 12 13 14 15 16 17, on right: 5 6
-multi_var (58)
-    on left: 18 19, on right: 14 15 19
-bool_exp (59)
-    on left: 20 21, on right: 9 10 11 12 13 21 27 31
-relation_and_exp (60)
-    on left: 22 23, on right: 20 21 23
-relation_exp (61)
-    on left: 24 25 26 27 28 29 30 31, on right: 22 23
-comp (62)
-    on left: 32 33 34 35 36 37, on right: 24 28
-exp (63)
-    on left: 38 39 40, on right: 8 13 17 24 28 39 40 49 50 53 54 56
-    57
-mult_exp (64)
-    on left: 41 42 43 44, on right: 38 39 40 42 43 44
-term (65)
-    on left: 45 46 47 48 49 50 51 52, on right: 41 42 43 44
-multi_exp (66)
-    on left: 53 54, on right: 51 54
-var (67)
-    on left: 55 56 57, on right: 8 13 18 19 45 46
+declaration (57)
+    on left: 8 9, on right: 4
+multi_id (58)
+    on left: 10 11, on right: 8 9 11
+statement (59)
+    on left: 12 13 14 15 16 17 18 19 20 21, on right: 5 6
+multi_var (60)
+    on left: 22 23, on right: 18 19 23
+bool_exp (61)
+    on left: 24 25, on right: 13 14 15 16 17 25 31 35
+relation_and_exp (62)
+    on left: 26 27, on right: 24 25 27
+relation_exp (63)
+    on left: 28 29 30 31 32 33 34 35, on right: 26 27
+comp (64)
+    on left: 36 37 38 39 40 41, on right: 28 32
+exp (65)
+    on left: 42 43 44, on right: 12 17 21 28 32 43 44 53 54 57 58 60
+    61
+mult_exp (66)
+    on left: 45 46 47 48, on right: 42 43 44 46 47 48
+term (67)
+    on left: 49 50 51 52 53 54 55 56, on right: 45 46 47 48
+multi_exp (68)
+    on left: 57 58, on right: 55 58
+var (69)
+    on left: 59 60 61, on right: 12 17 22 23 49 50
 
 
 State 0
 
     0 $accept: . program $end
 
+    FUNCTION  shift, and go to state 1
+
     $default  reduce using rule 1 (program)
 
-    program  go to state 1
+    program   go to state 2
+    function  go to state 3
 
 
 State 1
 
-    0 $accept: program . $end
-    2 program: program . function
+    7 function: FUNCTION . IDENT SEMICOLON BEGINPARAMS multi_declaration ENDPARAMS BEGINLOCALS multi_declaration ENDLOCALS BEGINBODY multi_statement ENDBODY
 
-    $end      shift, and go to state 2
-    FUNCTION  shift, and go to state 3
-
-    function  go to state 4
+    IDENT  shift, and go to state 4
 
 
 State 2
+
+    0 $accept: program . $end
+
+    $end  shift, and go to state 5
+
+
+State 3
+
+    2 program: function . program
+
+    FUNCTION  shift, and go to state 1
+
+    $default  reduce using rule 1 (program)
+
+    program   go to state 6
+    function  go to state 3
+
+
+State 4
+
+    7 function: FUNCTION IDENT . SEMICOLON BEGINPARAMS multi_declaration ENDPARAMS BEGINLOCALS multi_declaration ENDLOCALS BEGINBODY multi_statement ENDBODY
+
+    SEMICOLON  shift, and go to state 7
+
+
+State 5
 
     0 $accept: program $end .
 
     $default  accept
 
 
-State 3
+State 6
 
-    7 function: FUNCTION . IDENT SEMICOLON BEGINPARAMS multi_declaration ENDPARAMS BEGINLOCALS multi_declaration ENDLOCALS BEGINBODY multi_statement ENDBODY
-
-    IDENT  shift, and go to state 5
-
-
-State 4
-
-    2 program: program function .
+    2 program: function program .
 
     $default  reduce using rule 2 (program)
 
 
-State 5
-
-    7 function: FUNCTION IDENT . SEMICOLON BEGINPARAMS multi_declaration ENDPARAMS BEGINLOCALS multi_declaration ENDLOCALS BEGINBODY multi_statement ENDBODY
-
-    SEMICOLON  shift, and go to state 6
-
-
-State 6
+State 7
 
     7 function: FUNCTION IDENT SEMICOLON . BEGINPARAMS multi_declaration ENDPARAMS BEGINLOCALS multi_declaration ENDLOCALS BEGINBODY multi_statement ENDBODY
 
-    BEGINPARAMS  shift, and go to state 7
+    BEGINPARAMS  shift, and go to state 8
 
 
-State 7
+State 8
 
     7 function: FUNCTION IDENT SEMICOLON BEGINPARAMS . multi_declaration ENDPARAMS BEGINLOCALS multi_declaration ENDLOCALS BEGINBODY multi_statement ENDBODY
 
     $default  reduce using rule 3 (multi_declaration)
 
-    multi_declaration  go to state 8
-
-
-State 8
-
-    4 multi_declaration: multi_declaration . SEMICOLON
-    7 function: FUNCTION IDENT SEMICOLON BEGINPARAMS multi_declaration . ENDPARAMS BEGINLOCALS multi_declaration ENDLOCALS BEGINBODY multi_statement ENDBODY
-
-    SEMICOLON  shift, and go to state 9
-    ENDPARAMS  shift, and go to state 10
+    multi_declaration  go to state 9
 
 
 State 9
 
-    4 multi_declaration: multi_declaration SEMICOLON .
+    4 multi_declaration: multi_declaration . declaration SEMICOLON
+    7 function: FUNCTION IDENT SEMICOLON BEGINPARAMS multi_declaration . ENDPARAMS BEGINLOCALS multi_declaration ENDLOCALS BEGINBODY multi_statement ENDBODY
 
-    $default  reduce using rule 4 (multi_declaration)
+    IDENT      shift, and go to state 10
+    ENDPARAMS  shift, and go to state 11
+
+    declaration  go to state 12
+    multi_id     go to state 13
 
 
 State 10
 
-    7 function: FUNCTION IDENT SEMICOLON BEGINPARAMS multi_declaration ENDPARAMS . BEGINLOCALS multi_declaration ENDLOCALS BEGINBODY multi_statement ENDBODY
+   10 multi_id: IDENT .
 
-    BEGINLOCALS  shift, and go to state 11
+    $default  reduce using rule 10 (multi_id)
 
 
 State 11
+
+    7 function: FUNCTION IDENT SEMICOLON BEGINPARAMS multi_declaration ENDPARAMS . BEGINLOCALS multi_declaration ENDLOCALS BEGINBODY multi_statement ENDBODY
+
+    BEGINLOCALS  shift, and go to state 14
+
+
+State 12
+
+    4 multi_declaration: multi_declaration declaration . SEMICOLON
+
+    SEMICOLON  shift, and go to state 15
+
+
+State 13
+
+    8 declaration: multi_id . COLON INTEGER
+    9            | multi_id . COLON ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF INTEGER
+   11 multi_id: multi_id . COMMA IDENT
+
+    COLON  shift, and go to state 16
+    COMMA  shift, and go to state 17
+
+
+State 14
 
     7 function: FUNCTION IDENT SEMICOLON BEGINPARAMS multi_declaration ENDPARAMS BEGINLOCALS . multi_declaration ENDLOCALS BEGINBODY multi_statement ENDBODY
 
     $default  reduce using rule 3 (multi_declaration)
 
-    multi_declaration  go to state 12
-
-
-State 12
-
-    4 multi_declaration: multi_declaration . SEMICOLON
-    7 function: FUNCTION IDENT SEMICOLON BEGINPARAMS multi_declaration ENDPARAMS BEGINLOCALS multi_declaration . ENDLOCALS BEGINBODY multi_statement ENDBODY
-
-    SEMICOLON  shift, and go to state 9
-    ENDLOCALS  shift, and go to state 13
-
-
-State 13
-
-    7 function: FUNCTION IDENT SEMICOLON BEGINPARAMS multi_declaration ENDPARAMS BEGINLOCALS multi_declaration ENDLOCALS . BEGINBODY multi_statement ENDBODY
-
-    BEGINBODY  shift, and go to state 14
-
-
-State 14
-
-    7 function: FUNCTION IDENT SEMICOLON BEGINPARAMS multi_declaration ENDPARAMS BEGINLOCALS multi_declaration ENDLOCALS BEGINBODY . multi_statement ENDBODY
-
-    IDENT     shift, and go to state 15
-    IF        shift, and go to state 16
-    WHILE     shift, and go to state 17
-    DO        shift, and go to state 18
-    FOR       shift, and go to state 19
-    CONTINUE  shift, and go to state 20
-    READ      shift, and go to state 21
-    WRITE     shift, and go to state 22
-    RETURN    shift, and go to state 23
-
-    multi_statement  go to state 24
-    statement        go to state 25
-    var              go to state 26
+    multi_declaration  go to state 18
 
 
 State 15
 
-   55 var: IDENT .
-   56    | IDENT . L_SQUARE_BRACKET exp R_SQUARE_BRACKET
-   57    | IDENT . L_SQUARE_BRACKET exp R_SQUARE_BRACKET L_SQUARE_BRACKET exp R_SQUARE_BRACKET
+    4 multi_declaration: multi_declaration declaration SEMICOLON .
 
-    L_SQUARE_BRACKET  shift, and go to state 27
-
-    $default  reduce using rule 55 (var)
+    $default  reduce using rule 4 (multi_declaration)
 
 
 State 16
 
-    9 statement: IF . bool_exp THEN multi_statement ENDIF
-   10          | IF . bool_exp THEN multi_statement ELSE multi_statement ENDIF
+    8 declaration: multi_id COLON . INTEGER
+    9            | multi_id COLON . ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF INTEGER
 
-    IDENT    shift, and go to state 28
-    NUMBER   shift, and go to state 29
-    NOT      shift, and go to state 30
-    TRUE     shift, and go to state 31
-    FALSE    shift, and go to state 32
-    SUB      shift, and go to state 33
-    L_PAREN  shift, and go to state 34
-
-    bool_exp          go to state 35
-    relation_and_exp  go to state 36
-    relation_exp      go to state 37
-    exp               go to state 38
-    mult_exp          go to state 39
-    term              go to state 40
-    var               go to state 41
+    INTEGER  shift, and go to state 19
+    ARRAY    shift, and go to state 20
 
 
 State 17
 
-   11 statement: WHILE . bool_exp BEGINLOOP multi_statement ENDLOOP
+   11 multi_id: multi_id COMMA . IDENT
 
-    IDENT    shift, and go to state 28
-    NUMBER   shift, and go to state 29
-    NOT      shift, and go to state 30
-    TRUE     shift, and go to state 31
-    FALSE    shift, and go to state 32
-    SUB      shift, and go to state 33
-    L_PAREN  shift, and go to state 34
-
-    bool_exp          go to state 42
-    relation_and_exp  go to state 36
-    relation_exp      go to state 37
-    exp               go to state 38
-    mult_exp          go to state 39
-    term              go to state 40
-    var               go to state 41
+    IDENT  shift, and go to state 21
 
 
 State 18
 
-   12 statement: DO . BEGINLOOP multi_statement ENDLOOP WHILE bool_exp
+    4 multi_declaration: multi_declaration . declaration SEMICOLON
+    7 function: FUNCTION IDENT SEMICOLON BEGINPARAMS multi_declaration ENDPARAMS BEGINLOCALS multi_declaration . ENDLOCALS BEGINBODY multi_statement ENDBODY
 
-    BEGINLOOP  shift, and go to state 43
+    IDENT      shift, and go to state 10
+    ENDLOCALS  shift, and go to state 22
+
+    declaration  go to state 12
+    multi_id     go to state 13
 
 
 State 19
 
-   13 statement: FOR . var ASSIGN NUMBER SEMICOLON bool_exp SEMICOLON var ASSIGN exp BEGINLOOP multi_statement SEMICOLON ENDLOOP
+    8 declaration: multi_id COLON INTEGER .
 
-    IDENT  shift, and go to state 15
-
-    var  go to state 44
+    $default  reduce using rule 8 (declaration)
 
 
 State 20
 
-   16 statement: CONTINUE .
+    9 declaration: multi_id COLON ARRAY . L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF INTEGER
 
-    $default  reduce using rule 16 (statement)
+    L_SQUARE_BRACKET  shift, and go to state 23
 
 
 State 21
 
-   14 statement: READ . multi_var
+   11 multi_id: multi_id COMMA IDENT .
 
-    IDENT  shift, and go to state 15
-
-    multi_var  go to state 45
-    var        go to state 46
+    $default  reduce using rule 11 (multi_id)
 
 
 State 22
 
-   15 statement: WRITE . multi_var
+    7 function: FUNCTION IDENT SEMICOLON BEGINPARAMS multi_declaration ENDPARAMS BEGINLOCALS multi_declaration ENDLOCALS . BEGINBODY multi_statement ENDBODY
 
-    IDENT  shift, and go to state 15
-
-    multi_var  go to state 47
-    var        go to state 46
+    BEGINBODY  shift, and go to state 24
 
 
 State 23
 
-   17 statement: RETURN . exp
+    9 declaration: multi_id COLON ARRAY L_SQUARE_BRACKET . NUMBER R_SQUARE_BRACKET OF INTEGER
 
-    IDENT    shift, and go to state 28
-    NUMBER   shift, and go to state 29
-    SUB      shift, and go to state 33
-    L_PAREN  shift, and go to state 48
-
-    exp       go to state 49
-    mult_exp  go to state 39
-    term      go to state 40
-    var       go to state 41
+    NUMBER  shift, and go to state 25
 
 
 State 24
 
-    6 multi_statement: multi_statement . statement SEMICOLON
-    7 function: FUNCTION IDENT SEMICOLON BEGINPARAMS multi_declaration ENDPARAMS BEGINLOCALS multi_declaration ENDLOCALS BEGINBODY multi_statement . ENDBODY
+    7 function: FUNCTION IDENT SEMICOLON BEGINPARAMS multi_declaration ENDPARAMS BEGINLOCALS multi_declaration ENDLOCALS BEGINBODY . multi_statement ENDBODY
 
-    IDENT     shift, and go to state 15
-    ENDBODY   shift, and go to state 50
-    IF        shift, and go to state 16
-    WHILE     shift, and go to state 17
-    DO        shift, and go to state 18
-    FOR       shift, and go to state 19
-    CONTINUE  shift, and go to state 20
-    READ      shift, and go to state 21
-    WRITE     shift, and go to state 22
-    RETURN    shift, and go to state 23
+    IDENT     shift, and go to state 26
+    IF        shift, and go to state 27
+    WHILE     shift, and go to state 28
+    DO        shift, and go to state 29
+    FOR       shift, and go to state 30
+    CONTINUE  shift, and go to state 31
+    READ      shift, and go to state 32
+    WRITE     shift, and go to state 33
+    RETURN    shift, and go to state 34
 
-    statement  go to state 51
-    var        go to state 26
+    multi_statement  go to state 35
+    statement        go to state 36
+    var              go to state 37
 
 
 State 25
 
-    5 multi_statement: statement . SEMICOLON
+    9 declaration: multi_id COLON ARRAY L_SQUARE_BRACKET NUMBER . R_SQUARE_BRACKET OF INTEGER
 
-    SEMICOLON  shift, and go to state 52
+    R_SQUARE_BRACKET  shift, and go to state 38
 
 
 State 26
 
-    8 statement: var . ASSIGN exp
+   59 var: IDENT .
+   60    | IDENT . L_SQUARE_BRACKET exp R_SQUARE_BRACKET
+   61    | IDENT . L_SQUARE_BRACKET exp R_SQUARE_BRACKET L_SQUARE_BRACKET exp R_SQUARE_BRACKET
 
-    ASSIGN  shift, and go to state 53
+    L_SQUARE_BRACKET  shift, and go to state 39
+
+    $default  reduce using rule 59 (var)
 
 
 State 27
 
-   56 var: IDENT L_SQUARE_BRACKET . exp R_SQUARE_BRACKET
-   57    | IDENT L_SQUARE_BRACKET . exp R_SQUARE_BRACKET L_SQUARE_BRACKET exp R_SQUARE_BRACKET
+   13 statement: IF . bool_exp THEN multi_statement ENDIF
+   14          | IF . bool_exp THEN multi_statement ELSE multi_statement ENDIF
 
-    IDENT    shift, and go to state 28
-    NUMBER   shift, and go to state 29
-    SUB      shift, and go to state 33
-    L_PAREN  shift, and go to state 48
+    IDENT    shift, and go to state 40
+    NUMBER   shift, and go to state 41
+    NOT      shift, and go to state 42
+    TRUE     shift, and go to state 43
+    FALSE    shift, and go to state 44
+    SUB      shift, and go to state 45
+    L_PAREN  shift, and go to state 46
 
-    exp       go to state 54
-    mult_exp  go to state 39
-    term      go to state 40
-    var       go to state 41
+    bool_exp          go to state 47
+    relation_and_exp  go to state 48
+    relation_exp      go to state 49
+    exp               go to state 50
+    mult_exp          go to state 51
+    term              go to state 52
+    var               go to state 53
 
 
 State 28
 
-   51 term: IDENT . L_PAREN multi_exp R_PAREN
-   52     | IDENT . L_PAREN R_PAREN
-   55 var: IDENT .
-   56    | IDENT . L_SQUARE_BRACKET exp R_SQUARE_BRACKET
-   57    | IDENT . L_SQUARE_BRACKET exp R_SQUARE_BRACKET L_SQUARE_BRACKET exp R_SQUARE_BRACKET
+   15 statement: WHILE . bool_exp BEGINLOOP multi_statement ENDLOOP
 
-    L_PAREN           shift, and go to state 55
-    L_SQUARE_BRACKET  shift, and go to state 27
+    IDENT    shift, and go to state 40
+    NUMBER   shift, and go to state 41
+    NOT      shift, and go to state 42
+    TRUE     shift, and go to state 43
+    FALSE    shift, and go to state 44
+    SUB      shift, and go to state 45
+    L_PAREN  shift, and go to state 46
 
-    $default  reduce using rule 55 (var)
+    bool_exp          go to state 54
+    relation_and_exp  go to state 48
+    relation_exp      go to state 49
+    exp               go to state 50
+    mult_exp          go to state 51
+    term              go to state 52
+    var               go to state 53
 
 
 State 29
 
-   47 term: NUMBER .
+   16 statement: DO . BEGINLOOP multi_statement ENDLOOP WHILE bool_exp
 
-    $default  reduce using rule 47 (term)
+    BEGINLOOP  shift, and go to state 55
 
 
 State 30
 
-   28 relation_exp: NOT . exp comp exp
-   29             | NOT . TRUE
-   30             | NOT . FALSE
-   31             | NOT . L_PAREN bool_exp R_PAREN
+   17 statement: FOR . var ASSIGN NUMBER SEMICOLON bool_exp SEMICOLON var ASSIGN exp BEGINLOOP multi_statement SEMICOLON ENDLOOP
 
-    IDENT    shift, and go to state 28
-    NUMBER   shift, and go to state 29
-    TRUE     shift, and go to state 56
-    FALSE    shift, and go to state 57
-    SUB      shift, and go to state 33
-    L_PAREN  shift, and go to state 58
+    IDENT  shift, and go to state 26
 
-    exp       go to state 59
-    mult_exp  go to state 39
-    term      go to state 40
-    var       go to state 41
+    var  go to state 56
 
 
 State 31
 
-   25 relation_exp: TRUE .
+   20 statement: CONTINUE .
 
-    $default  reduce using rule 25 (relation_exp)
+    $default  reduce using rule 20 (statement)
 
 
 State 32
 
-   26 relation_exp: FALSE .
+   18 statement: READ . multi_var
 
-    $default  reduce using rule 26 (relation_exp)
+    IDENT  shift, and go to state 26
+
+    multi_var  go to state 57
+    var        go to state 58
 
 
 State 33
 
-   46 term: SUB . var
-   48     | SUB . NUMBER
-   50     | SUB . L_PAREN exp R_PAREN
+   19 statement: WRITE . multi_var
 
-    IDENT    shift, and go to state 15
-    NUMBER   shift, and go to state 60
-    L_PAREN  shift, and go to state 61
+    IDENT  shift, and go to state 26
 
-    var  go to state 62
+    multi_var  go to state 59
+    var        go to state 58
 
 
 State 34
 
-   27 relation_exp: L_PAREN . bool_exp R_PAREN
-   49 term: L_PAREN . exp R_PAREN
+   21 statement: RETURN . exp
 
-    IDENT    shift, and go to state 28
-    NUMBER   shift, and go to state 29
-    NOT      shift, and go to state 30
-    TRUE     shift, and go to state 31
-    FALSE    shift, and go to state 32
-    SUB      shift, and go to state 33
-    L_PAREN  shift, and go to state 34
+    IDENT    shift, and go to state 40
+    NUMBER   shift, and go to state 41
+    SUB      shift, and go to state 45
+    L_PAREN  shift, and go to state 60
 
-    bool_exp          go to state 63
-    relation_and_exp  go to state 36
-    relation_exp      go to state 37
-    exp               go to state 64
-    mult_exp          go to state 39
-    term              go to state 40
-    var               go to state 41
+    exp       go to state 61
+    mult_exp  go to state 51
+    term      go to state 52
+    var       go to state 53
 
 
 State 35
 
-    9 statement: IF bool_exp . THEN multi_statement ENDIF
-   10          | IF bool_exp . THEN multi_statement ELSE multi_statement ENDIF
-   21 bool_exp: bool_exp . OR relation_and_exp
+    6 multi_statement: multi_statement . statement SEMICOLON
+    7 function: FUNCTION IDENT SEMICOLON BEGINPARAMS multi_declaration ENDPARAMS BEGINLOCALS multi_declaration ENDLOCALS BEGINBODY multi_statement . ENDBODY
 
-    THEN  shift, and go to state 65
-    OR    shift, and go to state 66
+    IDENT     shift, and go to state 26
+    ENDBODY   shift, and go to state 62
+    IF        shift, and go to state 27
+    WHILE     shift, and go to state 28
+    DO        shift, and go to state 29
+    FOR       shift, and go to state 30
+    CONTINUE  shift, and go to state 31
+    READ      shift, and go to state 32
+    WRITE     shift, and go to state 33
+    RETURN    shift, and go to state 34
+
+    statement  go to state 63
+    var        go to state 37
 
 
 State 36
 
-   20 bool_exp: relation_and_exp .
-   23 relation_and_exp: relation_and_exp . AND relation_exp
+    5 multi_statement: statement . SEMICOLON
 
-    AND  shift, and go to state 67
-
-    $default  reduce using rule 20 (bool_exp)
+    SEMICOLON  shift, and go to state 64
 
 
 State 37
 
-   22 relation_and_exp: relation_exp .
+   12 statement: var . ASSIGN exp
 
-    $default  reduce using rule 22 (relation_and_exp)
+    ASSIGN  shift, and go to state 65
 
 
 State 38
 
-   24 relation_exp: exp . comp exp
-   39 exp: exp . ADD mult_exp
-   40    | exp . SUB mult_exp
+    9 declaration: multi_id COLON ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET . OF INTEGER
 
-    SUB  shift, and go to state 68
-    ADD  shift, and go to state 69
-    EQ   shift, and go to state 70
-    NEQ  shift, and go to state 71
-    LT   shift, and go to state 72
-    GT   shift, and go to state 73
-    LTE  shift, and go to state 74
-    GTE  shift, and go to state 75
-
-    comp  go to state 76
+    OF  shift, and go to state 66
 
 
 State 39
 
-   38 exp: mult_exp .
-   42 mult_exp: mult_exp . MULT term
-   43         | mult_exp . DIV term
-   44         | mult_exp . MOD term
+   60 var: IDENT L_SQUARE_BRACKET . exp R_SQUARE_BRACKET
+   61    | IDENT L_SQUARE_BRACKET . exp R_SQUARE_BRACKET L_SQUARE_BRACKET exp R_SQUARE_BRACKET
 
-    MULT  shift, and go to state 77
-    DIV   shift, and go to state 78
-    MOD   shift, and go to state 79
+    IDENT    shift, and go to state 40
+    NUMBER   shift, and go to state 41
+    SUB      shift, and go to state 45
+    L_PAREN  shift, and go to state 60
 
-    $default  reduce using rule 38 (exp)
+    exp       go to state 67
+    mult_exp  go to state 51
+    term      go to state 52
+    var       go to state 53
 
 
 State 40
 
-   41 mult_exp: term .
+   55 term: IDENT . L_PAREN multi_exp R_PAREN
+   56     | IDENT . L_PAREN R_PAREN
+   59 var: IDENT .
+   60    | IDENT . L_SQUARE_BRACKET exp R_SQUARE_BRACKET
+   61    | IDENT . L_SQUARE_BRACKET exp R_SQUARE_BRACKET L_SQUARE_BRACKET exp R_SQUARE_BRACKET
 
-    $default  reduce using rule 41 (mult_exp)
+    L_PAREN           shift, and go to state 68
+    L_SQUARE_BRACKET  shift, and go to state 39
+
+    $default  reduce using rule 59 (var)
 
 
 State 41
 
-   45 term: var .
+   51 term: NUMBER .
 
-    $default  reduce using rule 45 (term)
+    $default  reduce using rule 51 (term)
 
 
 State 42
 
-   11 statement: WHILE bool_exp . BEGINLOOP multi_statement ENDLOOP
-   21 bool_exp: bool_exp . OR relation_and_exp
+   32 relation_exp: NOT . exp comp exp
+   33             | NOT . TRUE
+   34             | NOT . FALSE
+   35             | NOT . L_PAREN bool_exp R_PAREN
 
-    BEGINLOOP  shift, and go to state 80
-    OR         shift, and go to state 66
+    IDENT    shift, and go to state 40
+    NUMBER   shift, and go to state 41
+    TRUE     shift, and go to state 69
+    FALSE    shift, and go to state 70
+    SUB      shift, and go to state 45
+    L_PAREN  shift, and go to state 71
+
+    exp       go to state 72
+    mult_exp  go to state 51
+    term      go to state 52
+    var       go to state 53
 
 
 State 43
 
-   12 statement: DO BEGINLOOP . multi_statement ENDLOOP WHILE bool_exp
+   29 relation_exp: TRUE .
 
-    IDENT     shift, and go to state 15
-    IF        shift, and go to state 16
-    WHILE     shift, and go to state 17
-    DO        shift, and go to state 18
-    FOR       shift, and go to state 19
-    CONTINUE  shift, and go to state 20
-    READ      shift, and go to state 21
-    WRITE     shift, and go to state 22
-    RETURN    shift, and go to state 23
-
-    multi_statement  go to state 81
-    statement        go to state 25
-    var              go to state 26
+    $default  reduce using rule 29 (relation_exp)
 
 
 State 44
 
-   13 statement: FOR var . ASSIGN NUMBER SEMICOLON bool_exp SEMICOLON var ASSIGN exp BEGINLOOP multi_statement SEMICOLON ENDLOOP
+   30 relation_exp: FALSE .
 
-    ASSIGN  shift, and go to state 82
+    $default  reduce using rule 30 (relation_exp)
 
 
 State 45
 
-   14 statement: READ multi_var .
-   19 multi_var: multi_var . COMMA var
+   50 term: SUB . var
+   52     | SUB . NUMBER
+   54     | SUB . L_PAREN exp R_PAREN
 
-    COMMA  shift, and go to state 83
+    IDENT    shift, and go to state 26
+    NUMBER   shift, and go to state 73
+    L_PAREN  shift, and go to state 74
 
-    $default  reduce using rule 14 (statement)
+    var  go to state 75
 
 
 State 46
 
-   18 multi_var: var .
+   31 relation_exp: L_PAREN . bool_exp R_PAREN
+   53 term: L_PAREN . exp R_PAREN
 
-    $default  reduce using rule 18 (multi_var)
+    IDENT    shift, and go to state 40
+    NUMBER   shift, and go to state 41
+    NOT      shift, and go to state 42
+    TRUE     shift, and go to state 43
+    FALSE    shift, and go to state 44
+    SUB      shift, and go to state 45
+    L_PAREN  shift, and go to state 46
+
+    bool_exp          go to state 76
+    relation_and_exp  go to state 48
+    relation_exp      go to state 49
+    exp               go to state 77
+    mult_exp          go to state 51
+    term              go to state 52
+    var               go to state 53
 
 
 State 47
 
-   15 statement: WRITE multi_var .
-   19 multi_var: multi_var . COMMA var
+   13 statement: IF bool_exp . THEN multi_statement ENDIF
+   14          | IF bool_exp . THEN multi_statement ELSE multi_statement ENDIF
+   25 bool_exp: bool_exp . OR relation_and_exp
 
-    COMMA  shift, and go to state 83
-
-    $default  reduce using rule 15 (statement)
+    THEN  shift, and go to state 78
+    OR    shift, and go to state 79
 
 
 State 48
 
-   49 term: L_PAREN . exp R_PAREN
+   24 bool_exp: relation_and_exp .
+   27 relation_and_exp: relation_and_exp . AND relation_exp
 
-    IDENT    shift, and go to state 28
-    NUMBER   shift, and go to state 29
-    SUB      shift, and go to state 33
-    L_PAREN  shift, and go to state 48
+    AND  shift, and go to state 80
 
-    exp       go to state 84
-    mult_exp  go to state 39
-    term      go to state 40
-    var       go to state 41
+    $default  reduce using rule 24 (bool_exp)
 
 
 State 49
 
-   17 statement: RETURN exp .
-   39 exp: exp . ADD mult_exp
-   40    | exp . SUB mult_exp
+   26 relation_and_exp: relation_exp .
 
-    SUB  shift, and go to state 68
-    ADD  shift, and go to state 69
-
-    $default  reduce using rule 17 (statement)
+    $default  reduce using rule 26 (relation_and_exp)
 
 
 State 50
+
+   28 relation_exp: exp . comp exp
+   43 exp: exp . ADD mult_exp
+   44    | exp . SUB mult_exp
+
+    SUB  shift, and go to state 81
+    ADD  shift, and go to state 82
+    EQ   shift, and go to state 83
+    NEQ  shift, and go to state 84
+    LT   shift, and go to state 85
+    GT   shift, and go to state 86
+    LTE  shift, and go to state 87
+    GTE  shift, and go to state 88
+
+    comp  go to state 89
+
+
+State 51
+
+   42 exp: mult_exp .
+   46 mult_exp: mult_exp . MULT term
+   47         | mult_exp . DIV term
+   48         | mult_exp . MOD term
+
+    MULT  shift, and go to state 90
+    DIV   shift, and go to state 91
+    MOD   shift, and go to state 92
+
+    $default  reduce using rule 42 (exp)
+
+
+State 52
+
+   45 mult_exp: term .
+
+    $default  reduce using rule 45 (mult_exp)
+
+
+State 53
+
+   49 term: var .
+
+    $default  reduce using rule 49 (term)
+
+
+State 54
+
+   15 statement: WHILE bool_exp . BEGINLOOP multi_statement ENDLOOP
+   25 bool_exp: bool_exp . OR relation_and_exp
+
+    BEGINLOOP  shift, and go to state 93
+    OR         shift, and go to state 79
+
+
+State 55
+
+   16 statement: DO BEGINLOOP . multi_statement ENDLOOP WHILE bool_exp
+
+    IDENT     shift, and go to state 26
+    IF        shift, and go to state 27
+    WHILE     shift, and go to state 28
+    DO        shift, and go to state 29
+    FOR       shift, and go to state 30
+    CONTINUE  shift, and go to state 31
+    READ      shift, and go to state 32
+    WRITE     shift, and go to state 33
+    RETURN    shift, and go to state 34
+
+    multi_statement  go to state 94
+    statement        go to state 36
+    var              go to state 37
+
+
+State 56
+
+   17 statement: FOR var . ASSIGN NUMBER SEMICOLON bool_exp SEMICOLON var ASSIGN exp BEGINLOOP multi_statement SEMICOLON ENDLOOP
+
+    ASSIGN  shift, and go to state 95
+
+
+State 57
+
+   18 statement: READ multi_var .
+   23 multi_var: multi_var . COMMA var
+
+    COMMA  shift, and go to state 96
+
+    $default  reduce using rule 18 (statement)
+
+
+State 58
+
+   22 multi_var: var .
+
+    $default  reduce using rule 22 (multi_var)
+
+
+State 59
+
+   19 statement: WRITE multi_var .
+   23 multi_var: multi_var . COMMA var
+
+    COMMA  shift, and go to state 96
+
+    $default  reduce using rule 19 (statement)
+
+
+State 60
+
+   53 term: L_PAREN . exp R_PAREN
+
+    IDENT    shift, and go to state 40
+    NUMBER   shift, and go to state 41
+    SUB      shift, and go to state 45
+    L_PAREN  shift, and go to state 60
+
+    exp       go to state 97
+    mult_exp  go to state 51
+    term      go to state 52
+    var       go to state 53
+
+
+State 61
+
+   21 statement: RETURN exp .
+   43 exp: exp . ADD mult_exp
+   44    | exp . SUB mult_exp
+
+    SUB  shift, and go to state 81
+    ADD  shift, and go to state 82
+
+    $default  reduce using rule 21 (statement)
+
+
+State 62
 
     7 function: FUNCTION IDENT SEMICOLON BEGINPARAMS multi_declaration ENDPARAMS BEGINLOCALS multi_declaration ENDLOCALS BEGINBODY multi_statement ENDBODY .
 
     $default  reduce using rule 7 (function)
 
 
-State 51
+State 63
 
     6 multi_statement: multi_statement statement . SEMICOLON
 
-    SEMICOLON  shift, and go to state 85
+    SEMICOLON  shift, and go to state 98
 
 
-State 52
+State 64
 
     5 multi_statement: statement SEMICOLON .
 
     $default  reduce using rule 5 (multi_statement)
 
 
-State 53
-
-    8 statement: var ASSIGN . exp
-
-    IDENT    shift, and go to state 28
-    NUMBER   shift, and go to state 29
-    SUB      shift, and go to state 33
-    L_PAREN  shift, and go to state 48
-
-    exp       go to state 86
-    mult_exp  go to state 39
-    term      go to state 40
-    var       go to state 41
-
-
-State 54
-
-   39 exp: exp . ADD mult_exp
-   40    | exp . SUB mult_exp
-   56 var: IDENT L_SQUARE_BRACKET exp . R_SQUARE_BRACKET
-   57    | IDENT L_SQUARE_BRACKET exp . R_SQUARE_BRACKET L_SQUARE_BRACKET exp R_SQUARE_BRACKET
-
-    SUB               shift, and go to state 68
-    ADD               shift, and go to state 69
-    R_SQUARE_BRACKET  shift, and go to state 87
-
-
-State 55
-
-   51 term: IDENT L_PAREN . multi_exp R_PAREN
-   52     | IDENT L_PAREN . R_PAREN
-
-    IDENT    shift, and go to state 28
-    NUMBER   shift, and go to state 29
-    SUB      shift, and go to state 33
-    L_PAREN  shift, and go to state 48
-    R_PAREN  shift, and go to state 88
-
-    exp        go to state 89
-    mult_exp   go to state 39
-    term       go to state 40
-    multi_exp  go to state 90
-    var        go to state 41
-
-
-State 56
-
-   29 relation_exp: NOT TRUE .
-
-    $default  reduce using rule 29 (relation_exp)
-
-
-State 57
-
-   30 relation_exp: NOT FALSE .
-
-    $default  reduce using rule 30 (relation_exp)
-
-
-State 58
-
-   31 relation_exp: NOT L_PAREN . bool_exp R_PAREN
-   49 term: L_PAREN . exp R_PAREN
-
-    IDENT    shift, and go to state 28
-    NUMBER   shift, and go to state 29
-    NOT      shift, and go to state 30
-    TRUE     shift, and go to state 31
-    FALSE    shift, and go to state 32
-    SUB      shift, and go to state 33
-    L_PAREN  shift, and go to state 34
-
-    bool_exp          go to state 91
-    relation_and_exp  go to state 36
-    relation_exp      go to state 37
-    exp               go to state 64
-    mult_exp          go to state 39
-    term              go to state 40
-    var               go to state 41
-
-
-State 59
-
-   28 relation_exp: NOT exp . comp exp
-   39 exp: exp . ADD mult_exp
-   40    | exp . SUB mult_exp
-
-    SUB  shift, and go to state 68
-    ADD  shift, and go to state 69
-    EQ   shift, and go to state 70
-    NEQ  shift, and go to state 71
-    LT   shift, and go to state 72
-    GT   shift, and go to state 73
-    LTE  shift, and go to state 74
-    GTE  shift, and go to state 75
-
-    comp  go to state 92
-
-
-State 60
-
-   48 term: SUB NUMBER .
-
-    $default  reduce using rule 48 (term)
-
-
-State 61
-
-   50 term: SUB L_PAREN . exp R_PAREN
-
-    IDENT    shift, and go to state 28
-    NUMBER   shift, and go to state 29
-    SUB      shift, and go to state 33
-    L_PAREN  shift, and go to state 48
-
-    exp       go to state 93
-    mult_exp  go to state 39
-    term      go to state 40
-    var       go to state 41
-
-
-State 62
-
-   46 term: SUB var .
-
-    $default  reduce using rule 46 (term)
-
-
-State 63
-
-   21 bool_exp: bool_exp . OR relation_and_exp
-   27 relation_exp: L_PAREN bool_exp . R_PAREN
-
-    OR       shift, and go to state 66
-    R_PAREN  shift, and go to state 94
-
-
-State 64
-
-   24 relation_exp: exp . comp exp
-   39 exp: exp . ADD mult_exp
-   40    | exp . SUB mult_exp
-   49 term: L_PAREN exp . R_PAREN
-
-    SUB      shift, and go to state 68
-    ADD      shift, and go to state 69
-    EQ       shift, and go to state 70
-    NEQ      shift, and go to state 71
-    LT       shift, and go to state 72
-    GT       shift, and go to state 73
-    LTE      shift, and go to state 74
-    GTE      shift, and go to state 75
-    R_PAREN  shift, and go to state 95
-
-    comp  go to state 76
-
-
 State 65
 
-    9 statement: IF bool_exp THEN . multi_statement ENDIF
-   10          | IF bool_exp THEN . multi_statement ELSE multi_statement ENDIF
+   12 statement: var ASSIGN . exp
 
-    IDENT     shift, and go to state 15
-    IF        shift, and go to state 16
-    WHILE     shift, and go to state 17
-    DO        shift, and go to state 18
-    FOR       shift, and go to state 19
-    CONTINUE  shift, and go to state 20
-    READ      shift, and go to state 21
-    WRITE     shift, and go to state 22
-    RETURN    shift, and go to state 23
+    IDENT    shift, and go to state 40
+    NUMBER   shift, and go to state 41
+    SUB      shift, and go to state 45
+    L_PAREN  shift, and go to state 60
 
-    multi_statement  go to state 96
-    statement        go to state 25
-    var              go to state 26
+    exp       go to state 99
+    mult_exp  go to state 51
+    term      go to state 52
+    var       go to state 53
 
 
 State 66
 
-   21 bool_exp: bool_exp OR . relation_and_exp
+    9 declaration: multi_id COLON ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF . INTEGER
 
-    IDENT    shift, and go to state 28
-    NUMBER   shift, and go to state 29
-    NOT      shift, and go to state 30
-    TRUE     shift, and go to state 31
-    FALSE    shift, and go to state 32
-    SUB      shift, and go to state 33
-    L_PAREN  shift, and go to state 34
-
-    relation_and_exp  go to state 97
-    relation_exp      go to state 37
-    exp               go to state 38
-    mult_exp          go to state 39
-    term              go to state 40
-    var               go to state 41
+    INTEGER  shift, and go to state 100
 
 
 State 67
 
-   23 relation_and_exp: relation_and_exp AND . relation_exp
+   43 exp: exp . ADD mult_exp
+   44    | exp . SUB mult_exp
+   60 var: IDENT L_SQUARE_BRACKET exp . R_SQUARE_BRACKET
+   61    | IDENT L_SQUARE_BRACKET exp . R_SQUARE_BRACKET L_SQUARE_BRACKET exp R_SQUARE_BRACKET
 
-    IDENT    shift, and go to state 28
-    NUMBER   shift, and go to state 29
-    NOT      shift, and go to state 30
-    TRUE     shift, and go to state 31
-    FALSE    shift, and go to state 32
-    SUB      shift, and go to state 33
-    L_PAREN  shift, and go to state 34
-
-    relation_exp  go to state 98
-    exp           go to state 38
-    mult_exp      go to state 39
-    term          go to state 40
-    var           go to state 41
+    SUB               shift, and go to state 81
+    ADD               shift, and go to state 82
+    R_SQUARE_BRACKET  shift, and go to state 101
 
 
 State 68
 
-   40 exp: exp SUB . mult_exp
+   55 term: IDENT L_PAREN . multi_exp R_PAREN
+   56     | IDENT L_PAREN . R_PAREN
 
-    IDENT    shift, and go to state 28
-    NUMBER   shift, and go to state 29
-    SUB      shift, and go to state 33
-    L_PAREN  shift, and go to state 48
+    IDENT    shift, and go to state 40
+    NUMBER   shift, and go to state 41
+    SUB      shift, and go to state 45
+    L_PAREN  shift, and go to state 60
+    R_PAREN  shift, and go to state 102
 
-    mult_exp  go to state 99
-    term      go to state 40
-    var       go to state 41
+    exp        go to state 103
+    mult_exp   go to state 51
+    term       go to state 52
+    multi_exp  go to state 104
+    var        go to state 53
 
 
 State 69
 
-   39 exp: exp ADD . mult_exp
+   33 relation_exp: NOT TRUE .
 
-    IDENT    shift, and go to state 28
-    NUMBER   shift, and go to state 29
-    SUB      shift, and go to state 33
-    L_PAREN  shift, and go to state 48
-
-    mult_exp  go to state 100
-    term      go to state 40
-    var       go to state 41
+    $default  reduce using rule 33 (relation_exp)
 
 
 State 70
 
-   32 comp: EQ .
+   34 relation_exp: NOT FALSE .
 
-    $default  reduce using rule 32 (comp)
+    $default  reduce using rule 34 (relation_exp)
 
 
 State 71
 
-   33 comp: NEQ .
+   35 relation_exp: NOT L_PAREN . bool_exp R_PAREN
+   53 term: L_PAREN . exp R_PAREN
 
-    $default  reduce using rule 33 (comp)
+    IDENT    shift, and go to state 40
+    NUMBER   shift, and go to state 41
+    NOT      shift, and go to state 42
+    TRUE     shift, and go to state 43
+    FALSE    shift, and go to state 44
+    SUB      shift, and go to state 45
+    L_PAREN  shift, and go to state 46
+
+    bool_exp          go to state 105
+    relation_and_exp  go to state 48
+    relation_exp      go to state 49
+    exp               go to state 77
+    mult_exp          go to state 51
+    term              go to state 52
+    var               go to state 53
 
 
 State 72
 
-   34 comp: LT .
+   32 relation_exp: NOT exp . comp exp
+   43 exp: exp . ADD mult_exp
+   44    | exp . SUB mult_exp
 
-    $default  reduce using rule 34 (comp)
+    SUB  shift, and go to state 81
+    ADD  shift, and go to state 82
+    EQ   shift, and go to state 83
+    NEQ  shift, and go to state 84
+    LT   shift, and go to state 85
+    GT   shift, and go to state 86
+    LTE  shift, and go to state 87
+    GTE  shift, and go to state 88
+
+    comp  go to state 106
 
 
 State 73
 
-   35 comp: GT .
+   52 term: SUB NUMBER .
 
-    $default  reduce using rule 35 (comp)
+    $default  reduce using rule 52 (term)
 
 
 State 74
 
-   36 comp: LTE .
+   54 term: SUB L_PAREN . exp R_PAREN
 
-    $default  reduce using rule 36 (comp)
+    IDENT    shift, and go to state 40
+    NUMBER   shift, and go to state 41
+    SUB      shift, and go to state 45
+    L_PAREN  shift, and go to state 60
+
+    exp       go to state 107
+    mult_exp  go to state 51
+    term      go to state 52
+    var       go to state 53
 
 
 State 75
 
-   37 comp: GTE .
+   50 term: SUB var .
 
-    $default  reduce using rule 37 (comp)
+    $default  reduce using rule 50 (term)
 
 
 State 76
 
-   24 relation_exp: exp comp . exp
+   25 bool_exp: bool_exp . OR relation_and_exp
+   31 relation_exp: L_PAREN bool_exp . R_PAREN
 
-    IDENT    shift, and go to state 28
-    NUMBER   shift, and go to state 29
-    SUB      shift, and go to state 33
-    L_PAREN  shift, and go to state 48
-
-    exp       go to state 101
-    mult_exp  go to state 39
-    term      go to state 40
-    var       go to state 41
+    OR       shift, and go to state 79
+    R_PAREN  shift, and go to state 108
 
 
 State 77
 
-   42 mult_exp: mult_exp MULT . term
+   28 relation_exp: exp . comp exp
+   43 exp: exp . ADD mult_exp
+   44    | exp . SUB mult_exp
+   53 term: L_PAREN exp . R_PAREN
 
-    IDENT    shift, and go to state 28
-    NUMBER   shift, and go to state 29
-    SUB      shift, and go to state 33
-    L_PAREN  shift, and go to state 48
+    SUB      shift, and go to state 81
+    ADD      shift, and go to state 82
+    EQ       shift, and go to state 83
+    NEQ      shift, and go to state 84
+    LT       shift, and go to state 85
+    GT       shift, and go to state 86
+    LTE      shift, and go to state 87
+    GTE      shift, and go to state 88
+    R_PAREN  shift, and go to state 109
 
-    term  go to state 102
-    var   go to state 41
+    comp  go to state 89
 
 
 State 78
 
-   43 mult_exp: mult_exp DIV . term
+   13 statement: IF bool_exp THEN . multi_statement ENDIF
+   14          | IF bool_exp THEN . multi_statement ELSE multi_statement ENDIF
 
-    IDENT    shift, and go to state 28
-    NUMBER   shift, and go to state 29
-    SUB      shift, and go to state 33
-    L_PAREN  shift, and go to state 48
+    IDENT     shift, and go to state 26
+    IF        shift, and go to state 27
+    WHILE     shift, and go to state 28
+    DO        shift, and go to state 29
+    FOR       shift, and go to state 30
+    CONTINUE  shift, and go to state 31
+    READ      shift, and go to state 32
+    WRITE     shift, and go to state 33
+    RETURN    shift, and go to state 34
 
-    term  go to state 103
-    var   go to state 41
+    multi_statement  go to state 110
+    statement        go to state 36
+    var              go to state 37
 
 
 State 79
 
-   44 mult_exp: mult_exp MOD . term
+   25 bool_exp: bool_exp OR . relation_and_exp
 
-    IDENT    shift, and go to state 28
-    NUMBER   shift, and go to state 29
-    SUB      shift, and go to state 33
-    L_PAREN  shift, and go to state 48
+    IDENT    shift, and go to state 40
+    NUMBER   shift, and go to state 41
+    NOT      shift, and go to state 42
+    TRUE     shift, and go to state 43
+    FALSE    shift, and go to state 44
+    SUB      shift, and go to state 45
+    L_PAREN  shift, and go to state 46
 
-    term  go to state 104
-    var   go to state 41
+    relation_and_exp  go to state 111
+    relation_exp      go to state 49
+    exp               go to state 50
+    mult_exp          go to state 51
+    term              go to state 52
+    var               go to state 53
 
 
 State 80
 
-   11 statement: WHILE bool_exp BEGINLOOP . multi_statement ENDLOOP
+   27 relation_and_exp: relation_and_exp AND . relation_exp
 
-    IDENT     shift, and go to state 15
-    IF        shift, and go to state 16
-    WHILE     shift, and go to state 17
-    DO        shift, and go to state 18
-    FOR       shift, and go to state 19
-    CONTINUE  shift, and go to state 20
-    READ      shift, and go to state 21
-    WRITE     shift, and go to state 22
-    RETURN    shift, and go to state 23
+    IDENT    shift, and go to state 40
+    NUMBER   shift, and go to state 41
+    NOT      shift, and go to state 42
+    TRUE     shift, and go to state 43
+    FALSE    shift, and go to state 44
+    SUB      shift, and go to state 45
+    L_PAREN  shift, and go to state 46
 
-    multi_statement  go to state 105
-    statement        go to state 25
-    var              go to state 26
+    relation_exp  go to state 112
+    exp           go to state 50
+    mult_exp      go to state 51
+    term          go to state 52
+    var           go to state 53
 
 
 State 81
 
-    6 multi_statement: multi_statement . statement SEMICOLON
-   12 statement: DO BEGINLOOP multi_statement . ENDLOOP WHILE bool_exp
+   44 exp: exp SUB . mult_exp
 
-    IDENT     shift, and go to state 15
-    IF        shift, and go to state 16
-    WHILE     shift, and go to state 17
-    DO        shift, and go to state 18
-    FOR       shift, and go to state 19
-    ENDLOOP   shift, and go to state 106
-    CONTINUE  shift, and go to state 20
-    READ      shift, and go to state 21
-    WRITE     shift, and go to state 22
-    RETURN    shift, and go to state 23
+    IDENT    shift, and go to state 40
+    NUMBER   shift, and go to state 41
+    SUB      shift, and go to state 45
+    L_PAREN  shift, and go to state 60
 
-    statement  go to state 51
-    var        go to state 26
+    mult_exp  go to state 113
+    term      go to state 52
+    var       go to state 53
 
 
 State 82
 
-   13 statement: FOR var ASSIGN . NUMBER SEMICOLON bool_exp SEMICOLON var ASSIGN exp BEGINLOOP multi_statement SEMICOLON ENDLOOP
+   43 exp: exp ADD . mult_exp
 
-    NUMBER  shift, and go to state 107
+    IDENT    shift, and go to state 40
+    NUMBER   shift, and go to state 41
+    SUB      shift, and go to state 45
+    L_PAREN  shift, and go to state 60
+
+    mult_exp  go to state 114
+    term      go to state 52
+    var       go to state 53
 
 
 State 83
 
-   19 multi_var: multi_var COMMA . var
+   36 comp: EQ .
 
-    IDENT  shift, and go to state 15
-
-    var  go to state 108
+    $default  reduce using rule 36 (comp)
 
 
 State 84
 
-   39 exp: exp . ADD mult_exp
-   40    | exp . SUB mult_exp
-   49 term: L_PAREN exp . R_PAREN
+   37 comp: NEQ .
 
-    SUB      shift, and go to state 68
-    ADD      shift, and go to state 69
-    R_PAREN  shift, and go to state 95
+    $default  reduce using rule 37 (comp)
 
 
 State 85
+
+   38 comp: LT .
+
+    $default  reduce using rule 38 (comp)
+
+
+State 86
+
+   39 comp: GT .
+
+    $default  reduce using rule 39 (comp)
+
+
+State 87
+
+   40 comp: LTE .
+
+    $default  reduce using rule 40 (comp)
+
+
+State 88
+
+   41 comp: GTE .
+
+    $default  reduce using rule 41 (comp)
+
+
+State 89
+
+   28 relation_exp: exp comp . exp
+
+    IDENT    shift, and go to state 40
+    NUMBER   shift, and go to state 41
+    SUB      shift, and go to state 45
+    L_PAREN  shift, and go to state 60
+
+    exp       go to state 115
+    mult_exp  go to state 51
+    term      go to state 52
+    var       go to state 53
+
+
+State 90
+
+   46 mult_exp: mult_exp MULT . term
+
+    IDENT    shift, and go to state 40
+    NUMBER   shift, and go to state 41
+    SUB      shift, and go to state 45
+    L_PAREN  shift, and go to state 60
+
+    term  go to state 116
+    var   go to state 53
+
+
+State 91
+
+   47 mult_exp: mult_exp DIV . term
+
+    IDENT    shift, and go to state 40
+    NUMBER   shift, and go to state 41
+    SUB      shift, and go to state 45
+    L_PAREN  shift, and go to state 60
+
+    term  go to state 117
+    var   go to state 53
+
+
+State 92
+
+   48 mult_exp: mult_exp MOD . term
+
+    IDENT    shift, and go to state 40
+    NUMBER   shift, and go to state 41
+    SUB      shift, and go to state 45
+    L_PAREN  shift, and go to state 60
+
+    term  go to state 118
+    var   go to state 53
+
+
+State 93
+
+   15 statement: WHILE bool_exp BEGINLOOP . multi_statement ENDLOOP
+
+    IDENT     shift, and go to state 26
+    IF        shift, and go to state 27
+    WHILE     shift, and go to state 28
+    DO        shift, and go to state 29
+    FOR       shift, and go to state 30
+    CONTINUE  shift, and go to state 31
+    READ      shift, and go to state 32
+    WRITE     shift, and go to state 33
+    RETURN    shift, and go to state 34
+
+    multi_statement  go to state 119
+    statement        go to state 36
+    var              go to state 37
+
+
+State 94
+
+    6 multi_statement: multi_statement . statement SEMICOLON
+   16 statement: DO BEGINLOOP multi_statement . ENDLOOP WHILE bool_exp
+
+    IDENT     shift, and go to state 26
+    IF        shift, and go to state 27
+    WHILE     shift, and go to state 28
+    DO        shift, and go to state 29
+    FOR       shift, and go to state 30
+    ENDLOOP   shift, and go to state 120
+    CONTINUE  shift, and go to state 31
+    READ      shift, and go to state 32
+    WRITE     shift, and go to state 33
+    RETURN    shift, and go to state 34
+
+    statement  go to state 63
+    var        go to state 37
+
+
+State 95
+
+   17 statement: FOR var ASSIGN . NUMBER SEMICOLON bool_exp SEMICOLON var ASSIGN exp BEGINLOOP multi_statement SEMICOLON ENDLOOP
+
+    NUMBER  shift, and go to state 121
+
+
+State 96
+
+   23 multi_var: multi_var COMMA . var
+
+    IDENT  shift, and go to state 26
+
+    var  go to state 122
+
+
+State 97
+
+   43 exp: exp . ADD mult_exp
+   44    | exp . SUB mult_exp
+   53 term: L_PAREN exp . R_PAREN
+
+    SUB      shift, and go to state 81
+    ADD      shift, and go to state 82
+    R_PAREN  shift, and go to state 109
+
+
+State 98
 
     6 multi_statement: multi_statement statement SEMICOLON .
 
     $default  reduce using rule 6 (multi_statement)
 
 
-State 86
-
-    8 statement: var ASSIGN exp .
-   39 exp: exp . ADD mult_exp
-   40    | exp . SUB mult_exp
-
-    SUB  shift, and go to state 68
-    ADD  shift, and go to state 69
-
-    $default  reduce using rule 8 (statement)
-
-
-State 87
-
-   56 var: IDENT L_SQUARE_BRACKET exp R_SQUARE_BRACKET .
-   57    | IDENT L_SQUARE_BRACKET exp R_SQUARE_BRACKET . L_SQUARE_BRACKET exp R_SQUARE_BRACKET
-
-    L_SQUARE_BRACKET  shift, and go to state 109
-
-    $default  reduce using rule 56 (var)
-
-
-State 88
-
-   52 term: IDENT L_PAREN R_PAREN .
-
-    $default  reduce using rule 52 (term)
-
-
-State 89
-
-   39 exp: exp . ADD mult_exp
-   40    | exp . SUB mult_exp
-   53 multi_exp: exp .
-
-    SUB  shift, and go to state 68
-    ADD  shift, and go to state 69
-
-    $default  reduce using rule 53 (multi_exp)
-
-
-State 90
-
-   51 term: IDENT L_PAREN multi_exp . R_PAREN
-   54 multi_exp: multi_exp . COMMA exp
-
-    COMMA    shift, and go to state 110
-    R_PAREN  shift, and go to state 111
-
-
-State 91
-
-   21 bool_exp: bool_exp . OR relation_and_exp
-   31 relation_exp: NOT L_PAREN bool_exp . R_PAREN
-
-    OR       shift, and go to state 66
-    R_PAREN  shift, and go to state 112
-
-
-State 92
-
-   28 relation_exp: NOT exp comp . exp
-
-    IDENT    shift, and go to state 28
-    NUMBER   shift, and go to state 29
-    SUB      shift, and go to state 33
-    L_PAREN  shift, and go to state 48
-
-    exp       go to state 113
-    mult_exp  go to state 39
-    term      go to state 40
-    var       go to state 41
-
-
-State 93
-
-   39 exp: exp . ADD mult_exp
-   40    | exp . SUB mult_exp
-   50 term: SUB L_PAREN exp . R_PAREN
-
-    SUB      shift, and go to state 68
-    ADD      shift, and go to state 69
-    R_PAREN  shift, and go to state 114
-
-
-State 94
-
-   27 relation_exp: L_PAREN bool_exp R_PAREN .
-
-    $default  reduce using rule 27 (relation_exp)
-
-
-State 95
-
-   49 term: L_PAREN exp R_PAREN .
-
-    $default  reduce using rule 49 (term)
-
-
-State 96
-
-    6 multi_statement: multi_statement . statement SEMICOLON
-    9 statement: IF bool_exp THEN multi_statement . ENDIF
-   10          | IF bool_exp THEN multi_statement . ELSE multi_statement ENDIF
-
-    IDENT     shift, and go to state 15
-    IF        shift, and go to state 16
-    ENDIF     shift, and go to state 115
-    ELSE      shift, and go to state 116
-    WHILE     shift, and go to state 17
-    DO        shift, and go to state 18
-    FOR       shift, and go to state 19
-    CONTINUE  shift, and go to state 20
-    READ      shift, and go to state 21
-    WRITE     shift, and go to state 22
-    RETURN    shift, and go to state 23
-
-    statement  go to state 51
-    var        go to state 26
-
-
-State 97
-
-   21 bool_exp: bool_exp OR relation_and_exp .
-   23 relation_and_exp: relation_and_exp . AND relation_exp
-
-    AND  shift, and go to state 67
-
-    $default  reduce using rule 21 (bool_exp)
-
-
-State 98
-
-   23 relation_and_exp: relation_and_exp AND relation_exp .
-
-    $default  reduce using rule 23 (relation_and_exp)
-
-
 State 99
 
-   40 exp: exp SUB mult_exp .
-   42 mult_exp: mult_exp . MULT term
-   43         | mult_exp . DIV term
-   44         | mult_exp . MOD term
-
-    MULT  shift, and go to state 77
-    DIV   shift, and go to state 78
-    MOD   shift, and go to state 79
-
-    $default  reduce using rule 40 (exp)
-
-
-State 100
-
-   39 exp: exp ADD mult_exp .
-   42 mult_exp: mult_exp . MULT term
-   43         | mult_exp . DIV term
-   44         | mult_exp . MOD term
-
-    MULT  shift, and go to state 77
-    DIV   shift, and go to state 78
-    MOD   shift, and go to state 79
-
-    $default  reduce using rule 39 (exp)
-
-
-State 101
-
-   24 relation_exp: exp comp exp .
-   39 exp: exp . ADD mult_exp
-   40    | exp . SUB mult_exp
-
-    SUB  shift, and go to state 68
-    ADD  shift, and go to state 69
-
-    $default  reduce using rule 24 (relation_exp)
-
-
-State 102
-
-   42 mult_exp: mult_exp MULT term .
-
-    $default  reduce using rule 42 (mult_exp)
-
-
-State 103
-
-   43 mult_exp: mult_exp DIV term .
-
-    $default  reduce using rule 43 (mult_exp)
-
-
-State 104
-
-   44 mult_exp: mult_exp MOD term .
-
-    $default  reduce using rule 44 (mult_exp)
-
-
-State 105
-
-    6 multi_statement: multi_statement . statement SEMICOLON
-   11 statement: WHILE bool_exp BEGINLOOP multi_statement . ENDLOOP
-
-    IDENT     shift, and go to state 15
-    IF        shift, and go to state 16
-    WHILE     shift, and go to state 17
-    DO        shift, and go to state 18
-    FOR       shift, and go to state 19
-    ENDLOOP   shift, and go to state 117
-    CONTINUE  shift, and go to state 20
-    READ      shift, and go to state 21
-    WRITE     shift, and go to state 22
-    RETURN    shift, and go to state 23
-
-    statement  go to state 51
-    var        go to state 26
-
-
-State 106
-
-   12 statement: DO BEGINLOOP multi_statement ENDLOOP . WHILE bool_exp
-
-    WHILE  shift, and go to state 118
-
-
-State 107
-
-   13 statement: FOR var ASSIGN NUMBER . SEMICOLON bool_exp SEMICOLON var ASSIGN exp BEGINLOOP multi_statement SEMICOLON ENDLOOP
-
-    SEMICOLON  shift, and go to state 119
-
-
-State 108
-
-   19 multi_var: multi_var COMMA var .
-
-    $default  reduce using rule 19 (multi_var)
-
-
-State 109
-
-   57 var: IDENT L_SQUARE_BRACKET exp R_SQUARE_BRACKET L_SQUARE_BRACKET . exp R_SQUARE_BRACKET
-
-    IDENT    shift, and go to state 28
-    NUMBER   shift, and go to state 29
-    SUB      shift, and go to state 33
-    L_PAREN  shift, and go to state 48
-
-    exp       go to state 120
-    mult_exp  go to state 39
-    term      go to state 40
-    var       go to state 41
-
-
-State 110
-
-   54 multi_exp: multi_exp COMMA . exp
-
-    IDENT    shift, and go to state 28
-    NUMBER   shift, and go to state 29
-    SUB      shift, and go to state 33
-    L_PAREN  shift, and go to state 48
-
-    exp       go to state 121
-    mult_exp  go to state 39
-    term      go to state 40
-    var       go to state 41
-
-
-State 111
-
-   51 term: IDENT L_PAREN multi_exp R_PAREN .
-
-    $default  reduce using rule 51 (term)
-
-
-State 112
-
-   31 relation_exp: NOT L_PAREN bool_exp R_PAREN .
-
-    $default  reduce using rule 31 (relation_exp)
-
-
-State 113
-
-   28 relation_exp: NOT exp comp exp .
-   39 exp: exp . ADD mult_exp
-   40    | exp . SUB mult_exp
-
-    SUB  shift, and go to state 68
-    ADD  shift, and go to state 69
-
-    $default  reduce using rule 28 (relation_exp)
-
-
-State 114
-
-   50 term: SUB L_PAREN exp R_PAREN .
-
-    $default  reduce using rule 50 (term)
-
-
-State 115
-
-    9 statement: IF bool_exp THEN multi_statement ENDIF .
-
-    $default  reduce using rule 9 (statement)
-
-
-State 116
-
-   10 statement: IF bool_exp THEN multi_statement ELSE . multi_statement ENDIF
-
-    IDENT     shift, and go to state 15
-    IF        shift, and go to state 16
-    WHILE     shift, and go to state 17
-    DO        shift, and go to state 18
-    FOR       shift, and go to state 19
-    CONTINUE  shift, and go to state 20
-    READ      shift, and go to state 21
-    WRITE     shift, and go to state 22
-    RETURN    shift, and go to state 23
-
-    multi_statement  go to state 122
-    statement        go to state 25
-    var              go to state 26
-
-
-State 117
-
-   11 statement: WHILE bool_exp BEGINLOOP multi_statement ENDLOOP .
-
-    $default  reduce using rule 11 (statement)
-
-
-State 118
-
-   12 statement: DO BEGINLOOP multi_statement ENDLOOP WHILE . bool_exp
-
-    IDENT    shift, and go to state 28
-    NUMBER   shift, and go to state 29
-    NOT      shift, and go to state 30
-    TRUE     shift, and go to state 31
-    FALSE    shift, and go to state 32
-    SUB      shift, and go to state 33
-    L_PAREN  shift, and go to state 34
-
-    bool_exp          go to state 123
-    relation_and_exp  go to state 36
-    relation_exp      go to state 37
-    exp               go to state 38
-    mult_exp          go to state 39
-    term              go to state 40
-    var               go to state 41
-
-
-State 119
-
-   13 statement: FOR var ASSIGN NUMBER SEMICOLON . bool_exp SEMICOLON var ASSIGN exp BEGINLOOP multi_statement SEMICOLON ENDLOOP
-
-    IDENT    shift, and go to state 28
-    NUMBER   shift, and go to state 29
-    NOT      shift, and go to state 30
-    TRUE     shift, and go to state 31
-    FALSE    shift, and go to state 32
-    SUB      shift, and go to state 33
-    L_PAREN  shift, and go to state 34
-
-    bool_exp          go to state 124
-    relation_and_exp  go to state 36
-    relation_exp      go to state 37
-    exp               go to state 38
-    mult_exp          go to state 39
-    term              go to state 40
-    var               go to state 41
-
-
-State 120
-
-   39 exp: exp . ADD mult_exp
-   40    | exp . SUB mult_exp
-   57 var: IDENT L_SQUARE_BRACKET exp R_SQUARE_BRACKET L_SQUARE_BRACKET exp . R_SQUARE_BRACKET
-
-    SUB               shift, and go to state 68
-    ADD               shift, and go to state 69
-    R_SQUARE_BRACKET  shift, and go to state 125
-
-
-State 121
-
-   39 exp: exp . ADD mult_exp
-   40    | exp . SUB mult_exp
-   54 multi_exp: multi_exp COMMA exp .
-
-    SUB  shift, and go to state 68
-    ADD  shift, and go to state 69
-
-    $default  reduce using rule 54 (multi_exp)
-
-
-State 122
-
-    6 multi_statement: multi_statement . statement SEMICOLON
-   10 statement: IF bool_exp THEN multi_statement ELSE multi_statement . ENDIF
-
-    IDENT     shift, and go to state 15
-    IF        shift, and go to state 16
-    ENDIF     shift, and go to state 126
-    WHILE     shift, and go to state 17
-    DO        shift, and go to state 18
-    FOR       shift, and go to state 19
-    CONTINUE  shift, and go to state 20
-    READ      shift, and go to state 21
-    WRITE     shift, and go to state 22
-    RETURN    shift, and go to state 23
-
-    statement  go to state 51
-    var        go to state 26
-
-
-State 123
-
-   12 statement: DO BEGINLOOP multi_statement ENDLOOP WHILE bool_exp .
-   21 bool_exp: bool_exp . OR relation_and_exp
-
-    OR  shift, and go to state 66
+   12 statement: var ASSIGN exp .
+   43 exp: exp . ADD mult_exp
+   44    | exp . SUB mult_exp
+
+    SUB  shift, and go to state 81
+    ADD  shift, and go to state 82
 
     $default  reduce using rule 12 (statement)
 
 
+State 100
+
+    9 declaration: multi_id COLON ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF INTEGER .
+
+    $default  reduce using rule 9 (declaration)
+
+
+State 101
+
+   60 var: IDENT L_SQUARE_BRACKET exp R_SQUARE_BRACKET .
+   61    | IDENT L_SQUARE_BRACKET exp R_SQUARE_BRACKET . L_SQUARE_BRACKET exp R_SQUARE_BRACKET
+
+    L_SQUARE_BRACKET  shift, and go to state 123
+
+    $default  reduce using rule 60 (var)
+
+
+State 102
+
+   56 term: IDENT L_PAREN R_PAREN .
+
+    $default  reduce using rule 56 (term)
+
+
+State 103
+
+   43 exp: exp . ADD mult_exp
+   44    | exp . SUB mult_exp
+   57 multi_exp: exp .
+
+    SUB  shift, and go to state 81
+    ADD  shift, and go to state 82
+
+    $default  reduce using rule 57 (multi_exp)
+
+
+State 104
+
+   55 term: IDENT L_PAREN multi_exp . R_PAREN
+   58 multi_exp: multi_exp . COMMA exp
+
+    COMMA    shift, and go to state 124
+    R_PAREN  shift, and go to state 125
+
+
+State 105
+
+   25 bool_exp: bool_exp . OR relation_and_exp
+   35 relation_exp: NOT L_PAREN bool_exp . R_PAREN
+
+    OR       shift, and go to state 79
+    R_PAREN  shift, and go to state 126
+
+
+State 106
+
+   32 relation_exp: NOT exp comp . exp
+
+    IDENT    shift, and go to state 40
+    NUMBER   shift, and go to state 41
+    SUB      shift, and go to state 45
+    L_PAREN  shift, and go to state 60
+
+    exp       go to state 127
+    mult_exp  go to state 51
+    term      go to state 52
+    var       go to state 53
+
+
+State 107
+
+   43 exp: exp . ADD mult_exp
+   44    | exp . SUB mult_exp
+   54 term: SUB L_PAREN exp . R_PAREN
+
+    SUB      shift, and go to state 81
+    ADD      shift, and go to state 82
+    R_PAREN  shift, and go to state 128
+
+
+State 108
+
+   31 relation_exp: L_PAREN bool_exp R_PAREN .
+
+    $default  reduce using rule 31 (relation_exp)
+
+
+State 109
+
+   53 term: L_PAREN exp R_PAREN .
+
+    $default  reduce using rule 53 (term)
+
+
+State 110
+
+    6 multi_statement: multi_statement . statement SEMICOLON
+   13 statement: IF bool_exp THEN multi_statement . ENDIF
+   14          | IF bool_exp THEN multi_statement . ELSE multi_statement ENDIF
+
+    IDENT     shift, and go to state 26
+    IF        shift, and go to state 27
+    ENDIF     shift, and go to state 129
+    ELSE      shift, and go to state 130
+    WHILE     shift, and go to state 28
+    DO        shift, and go to state 29
+    FOR       shift, and go to state 30
+    CONTINUE  shift, and go to state 31
+    READ      shift, and go to state 32
+    WRITE     shift, and go to state 33
+    RETURN    shift, and go to state 34
+
+    statement  go to state 63
+    var        go to state 37
+
+
+State 111
+
+   25 bool_exp: bool_exp OR relation_and_exp .
+   27 relation_and_exp: relation_and_exp . AND relation_exp
+
+    AND  shift, and go to state 80
+
+    $default  reduce using rule 25 (bool_exp)
+
+
+State 112
+
+   27 relation_and_exp: relation_and_exp AND relation_exp .
+
+    $default  reduce using rule 27 (relation_and_exp)
+
+
+State 113
+
+   44 exp: exp SUB mult_exp .
+   46 mult_exp: mult_exp . MULT term
+   47         | mult_exp . DIV term
+   48         | mult_exp . MOD term
+
+    MULT  shift, and go to state 90
+    DIV   shift, and go to state 91
+    MOD   shift, and go to state 92
+
+    $default  reduce using rule 44 (exp)
+
+
+State 114
+
+   43 exp: exp ADD mult_exp .
+   46 mult_exp: mult_exp . MULT term
+   47         | mult_exp . DIV term
+   48         | mult_exp . MOD term
+
+    MULT  shift, and go to state 90
+    DIV   shift, and go to state 91
+    MOD   shift, and go to state 92
+
+    $default  reduce using rule 43 (exp)
+
+
+State 115
+
+   28 relation_exp: exp comp exp .
+   43 exp: exp . ADD mult_exp
+   44    | exp . SUB mult_exp
+
+    SUB  shift, and go to state 81
+    ADD  shift, and go to state 82
+
+    $default  reduce using rule 28 (relation_exp)
+
+
+State 116
+
+   46 mult_exp: mult_exp MULT term .
+
+    $default  reduce using rule 46 (mult_exp)
+
+
+State 117
+
+   47 mult_exp: mult_exp DIV term .
+
+    $default  reduce using rule 47 (mult_exp)
+
+
+State 118
+
+   48 mult_exp: mult_exp MOD term .
+
+    $default  reduce using rule 48 (mult_exp)
+
+
+State 119
+
+    6 multi_statement: multi_statement . statement SEMICOLON
+   15 statement: WHILE bool_exp BEGINLOOP multi_statement . ENDLOOP
+
+    IDENT     shift, and go to state 26
+    IF        shift, and go to state 27
+    WHILE     shift, and go to state 28
+    DO        shift, and go to state 29
+    FOR       shift, and go to state 30
+    ENDLOOP   shift, and go to state 131
+    CONTINUE  shift, and go to state 31
+    READ      shift, and go to state 32
+    WRITE     shift, and go to state 33
+    RETURN    shift, and go to state 34
+
+    statement  go to state 63
+    var        go to state 37
+
+
+State 120
+
+   16 statement: DO BEGINLOOP multi_statement ENDLOOP . WHILE bool_exp
+
+    WHILE  shift, and go to state 132
+
+
+State 121
+
+   17 statement: FOR var ASSIGN NUMBER . SEMICOLON bool_exp SEMICOLON var ASSIGN exp BEGINLOOP multi_statement SEMICOLON ENDLOOP
+
+    SEMICOLON  shift, and go to state 133
+
+
+State 122
+
+   23 multi_var: multi_var COMMA var .
+
+    $default  reduce using rule 23 (multi_var)
+
+
+State 123
+
+   61 var: IDENT L_SQUARE_BRACKET exp R_SQUARE_BRACKET L_SQUARE_BRACKET . exp R_SQUARE_BRACKET
+
+    IDENT    shift, and go to state 40
+    NUMBER   shift, and go to state 41
+    SUB      shift, and go to state 45
+    L_PAREN  shift, and go to state 60
+
+    exp       go to state 134
+    mult_exp  go to state 51
+    term      go to state 52
+    var       go to state 53
+
+
 State 124
 
-   13 statement: FOR var ASSIGN NUMBER SEMICOLON bool_exp . SEMICOLON var ASSIGN exp BEGINLOOP multi_statement SEMICOLON ENDLOOP
-   21 bool_exp: bool_exp . OR relation_and_exp
+   58 multi_exp: multi_exp COMMA . exp
 
-    SEMICOLON  shift, and go to state 127
-    OR         shift, and go to state 66
+    IDENT    shift, and go to state 40
+    NUMBER   shift, and go to state 41
+    SUB      shift, and go to state 45
+    L_PAREN  shift, and go to state 60
+
+    exp       go to state 135
+    mult_exp  go to state 51
+    term      go to state 52
+    var       go to state 53
 
 
 State 125
 
-   57 var: IDENT L_SQUARE_BRACKET exp R_SQUARE_BRACKET L_SQUARE_BRACKET exp R_SQUARE_BRACKET .
+   55 term: IDENT L_PAREN multi_exp R_PAREN .
 
-    $default  reduce using rule 57 (var)
+    $default  reduce using rule 55 (term)
 
 
 State 126
 
-   10 statement: IF bool_exp THEN multi_statement ELSE multi_statement ENDIF .
+   35 relation_exp: NOT L_PAREN bool_exp R_PAREN .
 
-    $default  reduce using rule 10 (statement)
+    $default  reduce using rule 35 (relation_exp)
 
 
 State 127
 
-   13 statement: FOR var ASSIGN NUMBER SEMICOLON bool_exp SEMICOLON . var ASSIGN exp BEGINLOOP multi_statement SEMICOLON ENDLOOP
+   32 relation_exp: NOT exp comp exp .
+   43 exp: exp . ADD mult_exp
+   44    | exp . SUB mult_exp
 
-    IDENT  shift, and go to state 15
+    SUB  shift, and go to state 81
+    ADD  shift, and go to state 82
 
-    var  go to state 128
+    $default  reduce using rule 32 (relation_exp)
 
 
 State 128
 
-   13 statement: FOR var ASSIGN NUMBER SEMICOLON bool_exp SEMICOLON var . ASSIGN exp BEGINLOOP multi_statement SEMICOLON ENDLOOP
+   54 term: SUB L_PAREN exp R_PAREN .
 
-    ASSIGN  shift, and go to state 129
+    $default  reduce using rule 54 (term)
 
 
 State 129
 
-   13 statement: FOR var ASSIGN NUMBER SEMICOLON bool_exp SEMICOLON var ASSIGN . exp BEGINLOOP multi_statement SEMICOLON ENDLOOP
+   13 statement: IF bool_exp THEN multi_statement ENDIF .
 
-    IDENT    shift, and go to state 28
-    NUMBER   shift, and go to state 29
-    SUB      shift, and go to state 33
-    L_PAREN  shift, and go to state 48
-
-    exp       go to state 130
-    mult_exp  go to state 39
-    term      go to state 40
-    var       go to state 41
+    $default  reduce using rule 13 (statement)
 
 
 State 130
 
-   13 statement: FOR var ASSIGN NUMBER SEMICOLON bool_exp SEMICOLON var ASSIGN exp . BEGINLOOP multi_statement SEMICOLON ENDLOOP
-   39 exp: exp . ADD mult_exp
-   40    | exp . SUB mult_exp
+   14 statement: IF bool_exp THEN multi_statement ELSE . multi_statement ENDIF
 
-    BEGINLOOP  shift, and go to state 131
-    SUB        shift, and go to state 68
-    ADD        shift, and go to state 69
+    IDENT     shift, and go to state 26
+    IF        shift, and go to state 27
+    WHILE     shift, and go to state 28
+    DO        shift, and go to state 29
+    FOR       shift, and go to state 30
+    CONTINUE  shift, and go to state 31
+    READ      shift, and go to state 32
+    WRITE     shift, and go to state 33
+    RETURN    shift, and go to state 34
+
+    multi_statement  go to state 136
+    statement        go to state 36
+    var              go to state 37
 
 
 State 131
 
-   13 statement: FOR var ASSIGN NUMBER SEMICOLON bool_exp SEMICOLON var ASSIGN exp BEGINLOOP . multi_statement SEMICOLON ENDLOOP
+   15 statement: WHILE bool_exp BEGINLOOP multi_statement ENDLOOP .
 
-    IDENT     shift, and go to state 15
-    IF        shift, and go to state 16
-    WHILE     shift, and go to state 17
-    DO        shift, and go to state 18
-    FOR       shift, and go to state 19
-    CONTINUE  shift, and go to state 20
-    READ      shift, and go to state 21
-    WRITE     shift, and go to state 22
-    RETURN    shift, and go to state 23
-
-    multi_statement  go to state 132
-    statement        go to state 25
-    var              go to state 26
+    $default  reduce using rule 15 (statement)
 
 
 State 132
 
-    6 multi_statement: multi_statement . statement SEMICOLON
-   13 statement: FOR var ASSIGN NUMBER SEMICOLON bool_exp SEMICOLON var ASSIGN exp BEGINLOOP multi_statement . SEMICOLON ENDLOOP
+   16 statement: DO BEGINLOOP multi_statement ENDLOOP WHILE . bool_exp
 
-    IDENT      shift, and go to state 15
-    SEMICOLON  shift, and go to state 133
-    IF         shift, and go to state 16
-    WHILE      shift, and go to state 17
-    DO         shift, and go to state 18
-    FOR        shift, and go to state 19
-    CONTINUE   shift, and go to state 20
-    READ       shift, and go to state 21
-    WRITE      shift, and go to state 22
-    RETURN     shift, and go to state 23
+    IDENT    shift, and go to state 40
+    NUMBER   shift, and go to state 41
+    NOT      shift, and go to state 42
+    TRUE     shift, and go to state 43
+    FALSE    shift, and go to state 44
+    SUB      shift, and go to state 45
+    L_PAREN  shift, and go to state 46
 
-    statement  go to state 51
-    var        go to state 26
+    bool_exp          go to state 137
+    relation_and_exp  go to state 48
+    relation_exp      go to state 49
+    exp               go to state 50
+    mult_exp          go to state 51
+    term              go to state 52
+    var               go to state 53
 
 
 State 133
 
-   13 statement: FOR var ASSIGN NUMBER SEMICOLON bool_exp SEMICOLON var ASSIGN exp BEGINLOOP multi_statement SEMICOLON . ENDLOOP
+   17 statement: FOR var ASSIGN NUMBER SEMICOLON . bool_exp SEMICOLON var ASSIGN exp BEGINLOOP multi_statement SEMICOLON ENDLOOP
 
-    ENDLOOP  shift, and go to state 134
+    IDENT    shift, and go to state 40
+    NUMBER   shift, and go to state 41
+    NOT      shift, and go to state 42
+    TRUE     shift, and go to state 43
+    FALSE    shift, and go to state 44
+    SUB      shift, and go to state 45
+    L_PAREN  shift, and go to state 46
+
+    bool_exp          go to state 138
+    relation_and_exp  go to state 48
+    relation_exp      go to state 49
+    exp               go to state 50
+    mult_exp          go to state 51
+    term              go to state 52
+    var               go to state 53
 
 
 State 134
 
-   13 statement: FOR var ASSIGN NUMBER SEMICOLON bool_exp SEMICOLON var ASSIGN exp BEGINLOOP multi_statement SEMICOLON ENDLOOP .
+   43 exp: exp . ADD mult_exp
+   44    | exp . SUB mult_exp
+   61 var: IDENT L_SQUARE_BRACKET exp R_SQUARE_BRACKET L_SQUARE_BRACKET exp . R_SQUARE_BRACKET
 
-    $default  reduce using rule 13 (statement)
+    SUB               shift, and go to state 81
+    ADD               shift, and go to state 82
+    R_SQUARE_BRACKET  shift, and go to state 139
+
+
+State 135
+
+   43 exp: exp . ADD mult_exp
+   44    | exp . SUB mult_exp
+   58 multi_exp: multi_exp COMMA exp .
+
+    SUB  shift, and go to state 81
+    ADD  shift, and go to state 82
+
+    $default  reduce using rule 58 (multi_exp)
+
+
+State 136
+
+    6 multi_statement: multi_statement . statement SEMICOLON
+   14 statement: IF bool_exp THEN multi_statement ELSE multi_statement . ENDIF
+
+    IDENT     shift, and go to state 26
+    IF        shift, and go to state 27
+    ENDIF     shift, and go to state 140
+    WHILE     shift, and go to state 28
+    DO        shift, and go to state 29
+    FOR       shift, and go to state 30
+    CONTINUE  shift, and go to state 31
+    READ      shift, and go to state 32
+    WRITE     shift, and go to state 33
+    RETURN    shift, and go to state 34
+
+    statement  go to state 63
+    var        go to state 37
+
+
+State 137
+
+   16 statement: DO BEGINLOOP multi_statement ENDLOOP WHILE bool_exp .
+   25 bool_exp: bool_exp . OR relation_and_exp
+
+    OR  shift, and go to state 79
+
+    $default  reduce using rule 16 (statement)
+
+
+State 138
+
+   17 statement: FOR var ASSIGN NUMBER SEMICOLON bool_exp . SEMICOLON var ASSIGN exp BEGINLOOP multi_statement SEMICOLON ENDLOOP
+   25 bool_exp: bool_exp . OR relation_and_exp
+
+    SEMICOLON  shift, and go to state 141
+    OR         shift, and go to state 79
+
+
+State 139
+
+   61 var: IDENT L_SQUARE_BRACKET exp R_SQUARE_BRACKET L_SQUARE_BRACKET exp R_SQUARE_BRACKET .
+
+    $default  reduce using rule 61 (var)
+
+
+State 140
+
+   14 statement: IF bool_exp THEN multi_statement ELSE multi_statement ENDIF .
+
+    $default  reduce using rule 14 (statement)
+
+
+State 141
+
+   17 statement: FOR var ASSIGN NUMBER SEMICOLON bool_exp SEMICOLON . var ASSIGN exp BEGINLOOP multi_statement SEMICOLON ENDLOOP
+
+    IDENT  shift, and go to state 26
+
+    var  go to state 142
+
+
+State 142
+
+   17 statement: FOR var ASSIGN NUMBER SEMICOLON bool_exp SEMICOLON var . ASSIGN exp BEGINLOOP multi_statement SEMICOLON ENDLOOP
+
+    ASSIGN  shift, and go to state 143
+
+
+State 143
+
+   17 statement: FOR var ASSIGN NUMBER SEMICOLON bool_exp SEMICOLON var ASSIGN . exp BEGINLOOP multi_statement SEMICOLON ENDLOOP
+
+    IDENT    shift, and go to state 40
+    NUMBER   shift, and go to state 41
+    SUB      shift, and go to state 45
+    L_PAREN  shift, and go to state 60
+
+    exp       go to state 144
+    mult_exp  go to state 51
+    term      go to state 52
+    var       go to state 53
+
+
+State 144
+
+   17 statement: FOR var ASSIGN NUMBER SEMICOLON bool_exp SEMICOLON var ASSIGN exp . BEGINLOOP multi_statement SEMICOLON ENDLOOP
+   43 exp: exp . ADD mult_exp
+   44    | exp . SUB mult_exp
+
+    BEGINLOOP  shift, and go to state 145
+    SUB        shift, and go to state 81
+    ADD        shift, and go to state 82
+
+
+State 145
+
+   17 statement: FOR var ASSIGN NUMBER SEMICOLON bool_exp SEMICOLON var ASSIGN exp BEGINLOOP . multi_statement SEMICOLON ENDLOOP
+
+    IDENT     shift, and go to state 26
+    IF        shift, and go to state 27
+    WHILE     shift, and go to state 28
+    DO        shift, and go to state 29
+    FOR       shift, and go to state 30
+    CONTINUE  shift, and go to state 31
+    READ      shift, and go to state 32
+    WRITE     shift, and go to state 33
+    RETURN    shift, and go to state 34
+
+    multi_statement  go to state 146
+    statement        go to state 36
+    var              go to state 37
+
+
+State 146
+
+    6 multi_statement: multi_statement . statement SEMICOLON
+   17 statement: FOR var ASSIGN NUMBER SEMICOLON bool_exp SEMICOLON var ASSIGN exp BEGINLOOP multi_statement . SEMICOLON ENDLOOP
+
+    IDENT      shift, and go to state 26
+    SEMICOLON  shift, and go to state 147
+    IF         shift, and go to state 27
+    WHILE      shift, and go to state 28
+    DO         shift, and go to state 29
+    FOR        shift, and go to state 30
+    CONTINUE   shift, and go to state 31
+    READ       shift, and go to state 32
+    WRITE      shift, and go to state 33
+    RETURN     shift, and go to state 34
+
+    statement  go to state 63
+    var        go to state 37
+
+
+State 147
+
+   17 statement: FOR var ASSIGN NUMBER SEMICOLON bool_exp SEMICOLON var ASSIGN exp BEGINLOOP multi_statement SEMICOLON . ENDLOOP
+
+    ENDLOOP  shift, and go to state 148
+
+
+State 148
+
+   17 statement: FOR var ASSIGN NUMBER SEMICOLON bool_exp SEMICOLON var ASSIGN exp BEGINLOOP multi_statement SEMICOLON ENDLOOP .
+
+    $default  reduce using rule 17 (statement)

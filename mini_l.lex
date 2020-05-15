@@ -55,7 +55,7 @@ DIGIT    [0-9]
 "]" {currPos += yyleng; return R_SQUARE_BRACKET;}
 ":=" {currPos += yyleng; return ASSIGN;}
 
-[a-zA-Z][a-zA-Z0-9_]*[a-zA-Z0-9]|[a-zA-Z]  {currPos += yyleng; yylval.cVal = yytext; return IDENT;}
+[a-zA-Z][a-zA-Z0-9_]*[a-zA-Z0-9]|[a-zA-Z]  {currPos += yyleng; yylval.cVal = strdup(yytext); return IDENT;}
 
 "##".* 		{currPos = 1;}
 
