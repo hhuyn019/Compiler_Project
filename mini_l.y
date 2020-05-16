@@ -35,10 +35,13 @@ program: 	/*epsilon*/ {printf("program -> epsilon\n");}
 
 multi_declaration:	/*epsilon*/ { printf("multi_declaration -> epsilon\n");}
 			| multi_declaration declaration SEMICOLON { printf("multi_declaration -> multi_declaration SEMICOLON\n");}
+			| multi_declaration declaration error
 			;		
 
 multi_statement:	statement SEMICOLON { printf("multi_statement -> statement SEMICOLON\n");}
+			| statement error
 			| multi_statement statement SEMICOLON { printf("multi_statement -> multi_statement statement SEMICOLON\n");}
+			| multi_statement statement error
 			;
 
 function:	FUNCTION IDENT SEMICOLON 
@@ -46,19 +49,25 @@ function:	FUNCTION IDENT SEMICOLON
 		BEGINLOCALS multi_declaration ENDLOCALS
 		BEGINBODY multi_statement ENDBODY
 		{printf("function -> FUNCTION IDENT %s SEMICOLON BEGINPARAMS multi_declaration ENDPARAMS BEGINLOCALS multi_declaration ENDLOCALS BEGINBODY multi_statement ENDBODY\n", $2);}
+		| FUNCTION IDENT error
+		BEGINPARAMS multi_declaration ENDPARAMS
+		BEGINLOCALS multi_declaration ENDLOCALS
+		BEGINBODY multi_statement ENDBODY
 		;
 
 declaration:	multi_id COLON INTEGER {printf("declaration -> multi_id COLON INTEGER\n");}
+		| multi_id error INTEGER
 		| multi_id COLON ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF INTEGER 
 		{printf("declaration -> multi_id COLON ARRAY L_SQUARE_BRACKET NUMBER %d R_SQUARE_BRACKET OF INTEGER\n", $5);}
+		| multi_id error ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF INTEGER
 		;
 
 multi_id:       IDENT { printf("multi_id -> IDENT %s\n", $1);}
                 | multi_id COMMA IDENT {printf("multi_id -> multi_id COMMA IDENT %s\n", $3);}
                 ;
 
-
 statement:	var ASSIGN exp {printf("statement -> var ASSIGN exp\n");}
+		| var error exp
 		| IF bool_exp THEN multi_statement ENDIF 
 		{printf("statement -> IF bool_exp THEN multi_statement ENDIF\n");}
 		| IF bool_exp THEN multi_statement ELSE multi_statement ENDIF 
@@ -69,6 +78,11 @@ statement:	var ASSIGN exp {printf("statement -> var ASSIGN exp\n");}
 		{printf("statement -> DO BEGINLOOP multi_statement ENDLOOP WHILE bool_exp\n");}
 		| FOR var ASSIGN NUMBER SEMICOLON bool_exp SEMICOLON var ASSIGN exp BEGINLOOP multi_statement SEMICOLON ENDLOOP
 		{printf("statement -> FOR var ASSIGN NUMBER %d SEMICOLON bool_exp SEMICOLON var ASSIGN exp BEGINLOOP multi_statement SEMICOLON ENDLOOP\n", $4);}
+		| FOR var error NUMBER SEMICOLON bool_exp SEMICOLON var ASSIGN exp BEGINLOOP multi_statement SEMICOLON ENDLOOP
+		| FOR var ASSIGN NUMBER error bool_exp SEMICOLON var ASSIGN exp BEGINLOOP multi_statement SEMICOLON ENDLOOP
+		| FOR var ASSIGN NUMBER SEMICOLON bool_exp error var ASSIGN exp BEGINLOOP multi_statement SEMICOLON ENDLOOP
+		| FOR var ASSIGN NUMBER SEMICOLON bool_exp SEMICOLON var error exp BEGINLOOP multi_statement SEMICOLON ENDLOOP
+		| FOR var ASSIGN NUMBER SEMICOLON bool_exp SEMICOLON var ASSIGN exp BEGINLOOP multi_statement error ENDLOOP
 		| READ multi_var {printf("statement -> READ multi_var\n");}
 		| WRITE multi_var {printf("statement -> WRITE multi_var\n");}
 		| CONTINUE {printf("statement -> CONTINUE\n");}
@@ -164,5 +178,5 @@ int main(int argc, char ** argv)
 //}
 
 int yyerror(const char *msg) {
-	printf("ERRRRRROR Line %d, position %d: %s\n", currLine, currPos, msg);
+	printf("ERROR in line %d: %s\n", currLine, msg);
 }

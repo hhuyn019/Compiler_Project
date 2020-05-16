@@ -69,7 +69,8 @@ DIGIT    [0-9]
 
 {DIGIT}+ {currPos += yyleng; yylval.iVal=atoi(yytext); return NUMBER;}
 
-. {printf("Error at line %d, column %d: unrecognized symbol \"%s\"\n", currLine, currPos, yytext); exit(0);}
+. {currPos += yyleng;}
+
 %%
 
 //int main() {
