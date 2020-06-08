@@ -108,7 +108,7 @@ int yyerror(const char * msg);
 %start prog_start;
 
 prog_start: {addKeywords(); } program;
-            //implement error catch here
+            ##implement error catch here
             ;
 
 program:    /*epsilon*/ {printf("program -> epsilon\n");}
