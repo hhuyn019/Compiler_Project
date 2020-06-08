@@ -49,32 +49,6 @@ yy::parser::symbol_type yylex();
 %token FUNCTION
 	/* end of token specifications */
 
-%%
-
-%start prog_start;
-
-	/* define your grammars here use the same grammars 
-	 * you used in Phase 2 and modify their actions to generate codes
-	 * assume that your grammars start with prog_start
-	 */
-
-prog_start: 
-
-
-%%
-
-int main(int argc, char *argv[])
-{
-	yy::parser p;
-	return p.parse();
-}
-
-void yy::parser::error(const yy::location& l, const std::string& m)
-{
-	std::cerr << l << ": " << m << std::endl;
-}
-
-
 %{
 #include <stdio.h>
 #include <stdlib.h>
@@ -230,24 +204,35 @@ var:	IDENT {printf("var -> IDENT %s\n", $1);}
 
 %%
 
-int main(int argc, char ** argv)
+//int main(int argc, char ** argv)
+//{
+//	if(argc >= 2)
+//	{
+//		yyin = fopen(argv[1], "r");
+//		if(yyin == NULL)
+//		{
+//			yyin = stdin;
+//		}
+//	}
+//	else
+//	{
+//		yyin = stdin;
+//	}
+//
+//	yyparse(); // calls yylex()
+//
+//	return 0;
+//}
+
+int main(int argc, char *argv[])
 {
-	if(argc >= 2)
-	{
-		yyin = fopen(argv[1], "r");
-		if(yyin == NULL)
-		{
-			yyin = stdin;
-		}
-	}
-	else
-	{
-		yyin = stdin;
-	}
+	yy::parser p;
+	return p.parse();
+}
 
-	yyparse(); // calls yylex()
-
-	return 0;
+void yy::parser::error(const yy::location& l, const std::string& m)
+{
+	std::cerr << l << ": " << m << std::endl;
 }
 
 //void yyerror(const char * msg) {
