@@ -105,6 +105,12 @@ int yyerror(const char * msg);
 
 %%
 
+%start prog_start;
+
+prog_start: {addKeywords(); } program;
+            //implement error catch here
+            ;
+
 program:    /*epsilon*/ {printf("program -> epsilon\n");}
         | function program {printf("program -> function program\n");}
         ;
@@ -253,6 +259,10 @@ int main(int argc, char *argv[])
 {
     yy::parser p;
     return p.parse();
+}
+
+void addKeywords() {
+    //add keywords to table here
 }
 
 void yy::parser::error(const yy::location& l, const std::string& m)
