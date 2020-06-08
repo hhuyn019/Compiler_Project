@@ -64,7 +64,7 @@ yy::parser::symbol_type yylex();
      * list of keywords or any function you may need here */
     enum IdentifierType;
     std::stack<std::string> multiLoop;
-    std::map<std::string, IdentifierType> symbolTable;
+    std::unordered_map<std::string, IdentifierType> symbolTable;
     std::unordered_set <std::string> reservedKeywords;
     int paramCounter = 0;
     /* end of your code */
